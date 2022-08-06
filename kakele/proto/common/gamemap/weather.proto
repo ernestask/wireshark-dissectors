@@ -1,0 +1,12 @@
+syntax = "proto2";
+
+package mmorpg.proto.common.gamemap;
+
+message WeatherType {
+    enum Enum {
+        NONE = 0;
+        RAIN = 1;
+        SNOW = 2;
+        FOG = 3;
+    }
+}

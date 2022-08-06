@@ -1,0 +1,9 @@
+syntax = "proto2";
+
+package mmorpg.proto.client.other;
+
+enum TouchpadType {
+    NONE = 0;
+    ROUND = 1;
+    CROSS = 2;
+}

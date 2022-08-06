@@ -1,0 +1,22 @@
+syntax = "proto2";
+
+package mmorpg.proto.client.outfit;
+
+import "client/other/text.proto";
+
+message Outfit {
+    optional int32 id = 1;
+    optional other.ObfuscatedText name = 2;
+    optional int64 shop_cost = 3;
+    
+    repeated OutfitItemCost item_cost = 4;
+    message OutfitItemCost {
+        optional int32 item_id = 1;
+        optional int32 item_count = 2;
+    }
+    
+    optional bool premium_only = 5;
+    optional bool count_as_achievement = 6;
+    optional int32 shop_kakele_coins_cost = 7;
+    optional int32 shop_fastpass_kakele_coins_cost = 8;
+}

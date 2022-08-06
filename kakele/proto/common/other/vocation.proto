@@ -1,0 +1,14 @@
+syntax = "proto2";
+
+package mmorpg.proto.common.other;
+
+message Vocation {
+    enum Enum {
+        UNKNOWN = 0;
+        WARRIOR = 1;
+        MAGE = 2;
+        HUNTER = 3;
+        BERSERKER = 4;
+        ALCHEMIST = 5;
+    }
+}

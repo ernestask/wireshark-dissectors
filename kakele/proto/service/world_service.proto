@@ -1,0 +1,43 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+import "service/chat.proto";
+import "service/debug.proto";
+import "service/guild.proto";
+import "service/house.proto";
+import "service/inventory.proto";
+import "service/map.proto";
+import "service/market.proto";
+import "service/misc.proto";
+import "service/npc.proto";
+import "service/trade.proto";
+
+message WorldServiceRequest {
+    oneof request {
+        MapRequest map = 1;
+        MiscRequest misc = 2;
+        InventoryRequest inventory = 3;
+        ChatRequest chat = 4;
+        NpcRequest npc = 5;
+        GuildRequest guild = 6;
+        MarketRequest market = 7;
+        HouseRequest house = 8;
+        TradeRequest trade = 9;
+        DebugRequest debug = 1000;
+    }
+}
+
+message WorldServiceResponse {
+    oneof response {
+        MapResponse map = 1;
+        MiscResponse misc = 2;
+        InventoryResponse inventory = 3;
+        ChatResponse chat = 4;
+        NpcResponse npc = 5;
+        GuildResponse guild = 6;
+        MarketResponse market = 7;
+        HouseResponse house = 8;
+        TradeResponse trade = 9;
+    }
+}

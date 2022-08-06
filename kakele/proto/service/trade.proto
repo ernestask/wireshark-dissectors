@@ -1,0 +1,69 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+import "service/container.proto";
+
+message TradeRequest {
+    oneof request {
+        TradeOfferRequest trade_offer = 1;
+        AcceptTradeRequest accept_trade = 2;
+    }
+}
+
+message TradeResponse {
+    oneof response {
+        TradeOfferResponse trade_offer = 1;
+        AcceptTradeResponse accept_trade = 2;
+        OtherPlayerTradeOfferResponse other_player_trade_offer = 3;
+        CompletedTradeResponse completed_trade = 4;
+    }
+}
+
+message TradeOfferRequest {
+    optional int64 other_player_map_id = 1;
+    optional int64 gold = 2;
+    optional int64 kakele_coins = 3;
+    optional Container items = 4;
+}
+
+message AcceptTradeRequest {
+    optional int64 other_player_map_id = 1;
+    optional int64 gold = 2;
+    optional int64 kakele_coins = 3;
+    optional Container items = 4;
+}
+
+message TradeOfferResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ALREADY_TRADING_WITH_ANOTHER_PLAYER = 2;
+        ERROR = 3;
+    }
+}
+
+message OtherPlayerTradeOfferResponse {
+    optional int64 other_player_map_id = 1;
+    optional int64 gold = 2;
+    optional int64 kakele_coins = 3;
+    optional Container items = 4;
+}
+
+message AcceptTradeResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ERROR = 2;
+    }
+}
+
+message CompletedTradeResponse {
+    optional int64 other_player_map_id = 1;
+    optional int64 net_gold = 2;
+    optional int64 net_kakele_coins = 3;
+    optional Container items_to_remove = 4;
+    optional Container items_to_add = 5;
+}

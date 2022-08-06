@@ -1,0 +1,52 @@
+syntax = "proto2";
+
+package mmorpg.proto.common.creature;
+
+message ItemShop {
+    repeated ShopItem item = 1;
+    message ShopItem {
+        optional int32 item_id = 1;
+        optional int32 gold = 2;
+        optional int32 reputation_coins = 3;
+        optional int32 fastpass_kakele_coins = 4;
+        optional bool allow_unbound_item_for_risky_purchase = 5;
+    }
+}
+
+message SpellShop {
+    
+}
+
+message BankShop {
+    
+}
+
+message OutfitShop {
+    
+}
+
+message BlacksmithShop {
+    repeated UpgradeItemRequirement upgrade_item_requirement = 1;
+    message UpgradeItemRequirement {
+        optional int32 item_id = 1;
+        optional int32 count = 2;
+        optional int32 upgrade_level = 3;
+        optional int32 extra_count_per_level = 4;
+    }
+}
+
+message HerbalistShop {
+    
+}
+
+message PetShop {
+    
+}
+
+message MarketBroker {
+    
+}
+
+message BlesserShop {
+    
+}

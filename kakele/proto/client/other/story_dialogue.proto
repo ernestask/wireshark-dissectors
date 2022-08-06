@@ -1,0 +1,16 @@
+syntax = "proto2";
+
+package mmorpg.proto.client.other;
+
+import "client/other/text.proto";
+
+message StoryDialogue {
+    optional int32 id = 1;
+    
+    repeated Dialogue dialogue = 2;
+    message Dialogue {
+        optional ObfuscatedText text = 1;
+        repeated string no_sound_language = 2;
+        optional ObfuscatedText name = 3;
+    }
+}

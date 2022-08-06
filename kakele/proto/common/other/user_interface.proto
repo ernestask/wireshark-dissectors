@@ -1,0 +1,53 @@
+syntax = "proto2";
+
+package mmorpg.proto.common.other;
+
+message UserInterfaceEffect {
+    enum Enum {
+        UNKNOWN = 0;
+        GLOW = 1;
+        BLINK = 2;
+    }
+}
+
+message UserInterfaceElementId {
+    enum Enum {
+        UNKNOWN_INTERFACE_ID = 0;
+        INVENTORY_BUTTON_ID = 1;
+        MAP_BUTTON_ID = 2;
+        MISC_BUTTON_ID = 3;
+        QUEST_BUTTON_ID = 4;
+        SPELL_BUTTON_ID = 5;
+        STATUS_BUTTON_ID = 6;
+        CHAT_BUTTON_ID = 7;
+        OUTFIT_BUTTON_ID = 8;
+        REWARD_BUTTON_ID = 9;
+        PET_BUTTON_ID = 10;
+        FRIENDS_BUTTON_ID = 11;
+        EVENTS_BUTTON_ID = 12;
+        STORYLINE_BUTTON_ID = 13;
+        DAILY_REWARD_BUTTON_ID = 14;
+        GUILDS_BUTTON_ID = 15;
+        PLAYERS_ONLINE_BUTTON_ID = 16;
+        SERVER_BOOSTS_BUTTON_ID = 17;
+        COSMETICS_BUTTON_ID = 18;
+        IGNORED_CHAT_BUTTON_ID = 19;
+        CONTAINERS_BUTTON_ID = 20;
+        EDIT_CONTROLS_BUTTON_ID = 21;
+        REPORTS_BUTTON_ID = 22;
+        SCREENSHOTS_BUTTON_ID = 23;
+        REPUTATION_JOBS_BUTTON_ID = 24;
+        PLAYER_FLAGS_ID = 25;
+        GUIDING_ARROW_ID = 26;
+    }
+}
+
+message GameGuideId {
+    enum Enum {
+        UNKNOWN = 0;
+        LIFE = 1;
+        SPELLS = 2;
+        CHAT = 3;
+        MINIMAP = 4;
+    }
+}

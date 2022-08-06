@@ -1,0 +1,179 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+import "common/gamemap/position.proto";
+import "common/gamemap/tile_stack.proto";
+import "service/container.proto";
+
+message HousePermissionType {
+    enum Enum {
+        UNKNOWN = 0;
+        ENTER_HOUSE = 1;
+        DROP_ITEMS = 2;
+        PICK_ITEMS = 3;
+        USE_TILES = 4;
+        SET_TILES = 5;
+        VAULT = 6;
+    }
+}
+
+message HouseRequest {
+    oneof request {
+        HouseInspectRequest house_inspect = 1;
+        HouseBidRequest house_bid = 2;
+        HousePayRentRequest house_pay_rent = 3;
+        HouseSetTileRequest house_set_tile = 4;
+        HouseSetPermissionRequest house_set_permission = 5;
+        HouseForfeitRequest house_forfeit = 6;
+        HouseVaultRequest house_vault = 7;
+    }
+}
+
+message HouseResponse {
+    oneof request {
+        HouseInspectResponse house_inspect = 1;
+        HouseBidResponse house_bid = 2;
+        HousePayRentResponse house_pay_rent = 3;
+        HouseSetPermissionResponse house_set_permission = 4;
+        HouseUpdateResponse house_update = 5;
+        HouseForfeitResponse house_forfeit = 6;
+        HouseSetTileResponse house_set_tile = 7;
+        HouseVaultResponse house_vault = 8;
+    }
+}
+
+message HouseInspectRequest {
+    optional int32 house_id = 1;
+}
+
+message HouseInspectResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        OTHER_ERROR = 1;
+        SUCCESSFUL = 2;
+    }
+    
+    oneof house {
+        Occupied occupied = 2;
+        Free free = 3;
+    }
+    
+    message Occupied {
+        optional string owner_player_name = 1;
+        map<string, InvitedPlayer> invited_players = 2;
+        optional int64 rent_expires_in_seconds = 3;
+        
+        message InvitedPlayer {
+            repeated HousePermissionType.Enum permission = 1;
+        }
+    }
+    
+    message Free {
+        optional int64 bid_remaining_seconds = 1;
+        optional int64 last_bid_gold = 2;
+    }
+}
+
+message HouseBidRequest {
+    optional int32 house_id = 1;
+    
+    oneof bid {
+        int64 bid_gold = 2;
+        CancelBid cancel_bid = 3;
+    }
+    
+    message CancelBid {
+        
+    }
+}
+
+message HouseBidResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        OTHER_ERROR = 1;
+        BID_STARTED = 2;
+        BID_CANCELLED = 3;
+        BANK_HAS_ITEMS = 4;
+    }
+    
+    optional int32 house_id = 2;
+}
+
+message HousePayRentRequest {
+    optional int32 months_of_rent = 1;
+}
+
+message HousePayRentResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        OTHER_ERROR = 1;
+        SUCCESSFUL = 2;
+    }
+}
+
+message HouseSetTileRequest {
+    optional common.gamemap.Position position = 1;
+    optional common.gamemap.TileStack tile = 2;
+}
+
+message HouseSetPermissionRequest {
+    optional string player_name = 1;
+    repeated HousePermissionType.Enum permission = 2;
+}
+
+message HouseSetPermissionResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        OTHER_ERROR = 1;
+        PLAYER_NOT_ONLINE_OR_LIST_IS_FULL = 2;
+        SUCCESSFUL = 3;
+    }
+}
+
+message HouseUpdateResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        BID_COMPLETED = 1;
+        BID_OVERTAKE = 2;
+        HOUSE_RENT_EXPIRED = 3;
+    }
+    
+    optional int32 house_id = 2;
+}
+
+message HouseForfeitRequest {
+    
+}
+
+message HouseForfeitResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        OTHER_ERROR = 1;
+        SUCCESSFUL = 2;
+    }
+}
+
+message HouseSetTileResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        OTHER_ERROR = 1;
+        SUCCESSFUL = 2;
+    }
+}
+
+message HouseVaultRequest {
+    optional int32 house_id = 1;
+    optional GenericContainerRequest request = 2;
+}
+
+message HouseVaultResponse {
+    optional GenericContainerResponse response = 1;
+}

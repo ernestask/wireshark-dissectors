@@ -1,0 +1,44 @@
+syntax = "proto2";
+
+package mmorpg.proto.common.other;
+
+message EffectDuration {
+    enum Enum {
+        UNKNOWN = 0;
+        DURATION_10_SECONDS = 1;
+        DURATION_20_SECONDS = 2;
+        DURATION_60_SECONDS = 3;
+    }
+}
+
+message EffectType {
+    enum Enum {
+        UNKNOWN = 0;
+        WALK_HERE = 1;
+        LEARN_ATTACK = 2;
+        LEARN_INSPECT = 3;
+        LEARN_OPEN_CHEST = 4;
+        LEARN_STATUS = 5;
+        LEARN_INVENTORY = 6;
+        LEARN_FLAGS = 7;
+        LEARN_NPC = 8;
+        LEARN_SPELL = 9;
+        LEARN_HOTKEYS = 10;
+        LEARN_COLLECT_FRUIT = 11;
+        LEARN_CHAT = 12;
+        LEARN_MINIMAP = 13;
+        LEARN_OUTFIT = 14;
+        LEARN_CONFIG = 15;
+        LEARN_REWARD = 16;
+        LEARN_MOVE_MOBILE = 17;
+        LEARN_MOVE_PC = 18;
+        LEARN_QUEST_TOME = 19;
+        LEARN_COLLECT_FLOWER = 20;
+        LEARN_CONTROLLER = 21;
+        LEARN_AUTO_ATTACK = 22;
+        LEARN_PET = 23;
+        LEARN_STORYLINE = 24;
+        WELCOME = 25;
+        LEARN_SWAP = 27;
+    }
+}

@@ -1,0 +1,210 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+import "service/container.proto";
+
+message NpcRequest {
+    oneof request {
+        BuyItemShopRequest buy_item_shop = 1;
+        SellItemShopRequest sell_item_shop = 2;
+        BuySpellShopRequest buy_spell_shop = 3;
+        BankShopRequest bank_shop = 4;
+        BuyOutfitShopRequest buy_outfit_shop = 5;
+        NpcTalkRequest npc_talk = 6;
+        BlacksmithShopRequest blacksmith_shop = 7;
+        HerbalistShopRequest herbalist_shop = 8;
+        BuyPetShopRequest buy_pet_shop = 9;
+        BlesserShopRequest blesser_shop = 10;
+    }
+}
+
+message NpcResponse {
+    oneof response {
+        BuyItemShopResponse buy_item_shop = 1;
+        SellItemShopResponse sell_item_shop = 2;
+        BuySpellShopResponse buy_spell_shop = 3;
+        BankShopResponse bank_shop = 4;
+        BuyOutfitShopResponse buy_outfit_shop = 5;
+        NpcTalkResponse npc_talk = 6;
+        BlacksmithShopResponse blacksmith_shop = 7;
+        HerbalistShopResponse herbalist_shop = 8;
+        BuyPetShopResponse buy_pet_shop = 9;
+        BlesserShopResponse blesser_shop = 10;
+    }
+}
+
+message BuyItemShopRequest {
+    optional int64 npc_map_id = 1;
+    optional int32 item_id = 2;
+    optional int32 count = 3;
+    optional bool use_fastpass = 4;
+}
+
+message SellItemShopRequest {
+    optional int64 npc_map_id = 1;
+    optional Container items = 2;
+}
+
+message BuySpellShopRequest {
+    optional int64 npc_map_id = 1;
+    optional int32 spell_id = 2;
+}
+
+message BankShopRequest {
+    optional int64 npc_map_id = 1;
+    optional GenericContainerRequest request = 2;
+}
+
+message BuyOutfitShopRequest {
+    optional int64 npc_map_id = 1;
+    optional int32 outfit_id = 2;
+    optional bool use_fastpass = 3;
+}
+
+message NpcTalkRequest {
+    optional int64 npc_map_id = 1;
+    optional int32 speech_id = 2;
+    optional int32 speech_index = 3;
+}
+
+message BlacksmithShopRequest {
+    optional int64 npc_map_id = 1;
+    optional Item item = 2;
+    
+    optional Attribute attribute = 3;
+    enum Attribute {
+        UNKNOWN = 0;
+        ATTACK = 1;
+        ARMOR = 2;
+        MAGIC = 3;
+    }
+    
+    optional bool is_downgrade = 4;
+}
+
+message HerbalistShopRequest {
+    optional int64 npc_map_id = 1;
+    optional Item food_item = 2;
+    optional Item herb_item = 3;
+}
+
+message BuyItemShopResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ERROR = 2;
+    }
+    
+    optional Container items = 2;
+    optional int64 gold = 3;
+    optional int64 reputation_coins = 4;
+    optional int64 kakele_coins = 5;
+}
+
+message SellItemShopResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ERROR = 2;
+    }
+}
+
+message BuySpellShopResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ERROR = 2;
+    }
+}
+
+message BankShopResponse {
+    optional GenericContainerResponse response = 1;
+    optional int64 gold = 2;
+    optional int64 kakele_coins = 3;
+    optional bool has_pending_items_but_bank_is_full = 4;
+}
+
+message BuyOutfitShopResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ERROR = 2;
+    }
+    
+    repeated Item used_item = 2;
+}
+
+message NpcTalkResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ERROR = 2;
+    }
+}
+
+message BlacksmithShopResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ERROR = 2;
+    }
+    
+    repeated Item used_item = 2;
+    optional int64 returned_gold = 3;
+}
+
+message HerbalistShopResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ERROR = 2;
+    }
+}
+
+message BuyPetShopRequest {
+    optional int64 npc_map_id = 1;
+    optional int32 pet_id = 2;
+    optional bool use_fastpass = 3;
+}
+
+message BuyPetShopResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ERROR = 2;
+    }
+    
+    repeated Item used_item = 2;
+}
+
+message BlesserShopRequest {
+    optional int64 npc_map_id = 1;
+    optional Item upgrade_item = 2;
+    
+    oneof request {
+        Item sacrifice_item = 3;
+        Reset reset = 4;
+    }
+    
+    message Reset {
+        
+    }
+}
+
+message BlesserShopResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ERROR = 2;
+    }
+}

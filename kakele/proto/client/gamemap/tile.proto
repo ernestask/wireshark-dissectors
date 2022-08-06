@@ -1,0 +1,36 @@
+syntax = "proto2";
+
+package mmorpg.proto.client.gamemap;
+
+import "common/gamemap/tile.proto";
+import "common/other/light.proto";
+import "client/gamemap/minimap_hint.proto";
+import "client/other/text.proto";
+
+message Tile {
+    optional int32 id = 1;
+    optional other.ObfuscatedText name = 2;
+    optional int32 minimap_color_id = 3;
+    
+    optional Blocking blocking = 4;
+    enum Blocking {
+        DOES_NOT_BLOCK = 0;
+        BLOCKS_CREATURES = 1;
+        BLOCKS_PLAYERS = 2;
+    }
+    
+    optional bool projectile_blocking = 5;
+    optional other.ObfuscatedText description = 6;
+    optional common.other.Light light = 7;
+    optional common.gamemap.TileAttributes attributes = 8;
+    optional bool enabled_for_housing = 9;
+    optional MinimapHint minimap_hint = 10;
+    
+    optional AnimationType animation_type = 11 [default = CONTINUOUS];
+    enum AnimationType {
+        CONTINUOUS = 0;
+        RANDOM = 1;
+    }
+    
+    repeated int32 weather_hash_factor = 12;
+}

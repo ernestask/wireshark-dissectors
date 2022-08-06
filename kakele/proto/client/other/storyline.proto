@@ -1,0 +1,44 @@
+syntax = "proto2";
+
+package mmorpg.proto.client.other;
+
+import "client/action/requirement.proto";
+import "client/other/text.proto";
+import "common/gamemap/position.proto";
+
+message Storyline {
+    optional int32 id = 1;
+    optional ObfuscatedText name = 2;
+    
+    repeated Stage stage = 3;
+    message Stage {
+        optional ObfuscatedText title = 1;
+        optional ObfuscatedText description = 2;
+        
+        repeated Quest completed_quest = 3;
+        message Quest {
+            optional int32 id = 1;
+        }
+        
+        repeated Quest started_quest = 4;
+        
+        optional Operation quest_operation = 5 [default = AND];
+        enum Operation {
+            UNKNOWN_OPERATION = 0;
+            AND = 1;
+            OR = 2;
+        }
+        
+        optional int32 level = 6;
+        optional int32 maximum_level = 9;
+        repeated GuidingArrow guiding_arrow = 7;
+        optional int32 on_start_story_dialogue_id = 8;
+        optional int32 on_complete_story_dialogue_id = 10;
+    }
+    
+    message GuidingArrow {
+        optional common.gamemap.Position position = 1;
+        repeated action.Requirement requirement = 2;
+        optional int32 story_dialogue_id = 3;
+    }
+}

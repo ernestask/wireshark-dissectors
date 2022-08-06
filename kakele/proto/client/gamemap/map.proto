@@ -1,0 +1,21 @@
+syntax = "proto2";
+
+package mmorpg.proto.client.gamemap;
+
+import "client/gamemap/minimap_hint.proto";
+import "client/other/text.proto";
+import "common/gamemap/position.proto";
+import "common/gamemap/tile_stack.proto";
+
+message SqmDescription {
+    optional common.gamemap.Position position = 1;
+    optional other.ObfuscatedText custom_description = 3;
+}
+
+message Map {
+    optional int32 id = 1;
+    repeated SqmHint hint = 2;
+    repeated SqmDescription sqm_description = 3;
+    optional bytes serialized_sqms = 4;
+    repeated common.gamemap.TileStack tile_stack = 5;
+}

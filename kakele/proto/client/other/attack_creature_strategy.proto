@@ -1,0 +1,11 @@
+syntax = "proto2";
+
+package mmorpg.proto.client.other;
+
+enum AttackCreatureStrategy {
+    UNKNOWN_STRATEGY = 0;
+    CLOSEST_MONSTER = 1;
+    FURTHEST_MONSTER = 2;
+    MONSTER_WITH_LEAST_HEALTH = 3;
+    MONSTER_WITH_MOST_HEALTH = 4;
+}

@@ -1,0 +1,208 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+import "common/other/vocation.proto";
+import "service/container.proto";
+import "service/creature.proto";
+import "service/equipment.proto";
+import "service/other.proto";
+import "service/outfit.proto";
+import "service/player.proto";
+import "service/quest.proto";
+import "service/spell.proto";
+
+message CharacterMarketRequest {
+    oneof request {
+        AddPlayerToCharacterMarketRequest add_player_to_character_market = 1;
+        ListCharacterMarketRequest list_character_market = 2;
+        GetCharacterMarketFullDetailsRequest get_character_market_full_details = 3;
+        PlaceBidOnCharacterMarketRequest place_bid_on_character_market = 4;
+        RemoveFromCharacterMarketRequest remove_from_character_market = 5;
+        CancelBidOnCharacterMarketRequest cancel_bid_on_character_market = 6;
+        GetCharacterMarketOwnBidsRequest get_character_market_own_bids = 7;
+        UpdatePendingCoinsFromCharacterMarketRequest update_pending_coins_from_character_market = 8;
+    }
+}
+
+message CharacterMarketResponse {
+    oneof response {
+        AddPlayerToCharacterMarketResponse add_player_to_character_market = 1;
+        ListCharacterMarketResponse list_character_market = 2;
+        GetCharacterMarketFullDetailsResponse get_character_market_full_details = 3;
+        PlaceBidOnCharacterMarketResponse place_bid_on_character_market = 4;
+        RemoveFromCharacterMarketResponse remove_from_character_market = 5;
+        CancelBidOnCharacterMarketResponse cancel_bid_on_character_market = 6;
+        GetCharacterMarketOwnBidsResponse get_character_market_own_bids = 7;
+        UpdatePendingCoinsFromCharacterMarketResponse update_pending_coins_from_character_market = 8;
+    }
+}
+
+message CharacterAuctionDetails {
+    optional int64 current_offer_kakele_coins = 1;
+    optional bool has_buyer = 2;
+    optional int64 auction_ends_on_unix_seconds = 3;
+    optional bool is_bid_owner = 4;
+    optional int64 instant_buy_price = 5;
+}
+
+message CharacterForSaleDetails {
+    optional string player_name = 1;
+    optional CharacterAuctionDetails auction_details = 2;
+    optional string world_server = 3;
+    optional int64 experience = 4;
+    optional common.other.Vocation.Enum vocation = 5;
+    optional Container valuable_items = 6;
+}
+
+message CharacterForSaleFullDetails {
+    optional CharacterForSaleDetails details = 1;
+    optional Container backpack = 2;
+    optional Equipments equipments = 3;
+    optional Spells spells = 4;
+    optional int64 gold = 5;
+    optional Outfits outfits = 6;
+    optional Quests quests = 7;
+    optional PvpInfo pvp_info = 8;
+    optional int64 reputation_coins = 9;
+    optional OwnedPets pets = 10;
+    optional Container bank = 11;
+}
+
+message AddPlayerToCharacterMarketRequest {
+    optional bytes encrypted_login_key = 1;
+    optional string player_name = 2;
+    optional int64 minimum_kakele_coins_price = 3;
+    optional int64 instant_buy_price = 4;
+}
+
+message AddPlayerToCharacterMarketResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OTHER_ERROR = 2;
+        OUT_OF_SYNC = 3;
+        NOT_SAFE_TO_TRANSFER = 4;
+    }
+    
+    optional SafeToTransferStatus.Enum not_safe_to_transfer_reason = 2;
+}
+
+message ListCharacterMarketRequest {
+    optional bytes encrypted_login_key = 1;
+    optional int32 page = 2;
+}
+
+message ListCharacterMarketResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OTHER_ERROR = 2;
+        OUT_OF_SYNC = 3;
+    }
+    
+    repeated CharacterForSaleDetails character_for_sale_details = 2;
+    optional int32 total_pages = 3;
+}
+
+message GetCharacterMarketFullDetailsRequest {
+    optional bytes encrypted_login_key = 1;
+    optional string player_name = 2;
+}
+
+message GetCharacterMarketFullDetailsResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OTHER_ERROR = 2;
+        OUT_OF_SYNC = 3;
+    }
+    
+    optional CharacterForSaleFullDetails details = 2;
+    optional bool can_place_bid = 3;
+}
+
+message PlaceBidOnCharacterMarketRequest {
+    optional bytes encrypted_login_key = 1;
+    optional string player_name = 2;
+    optional int64 bid_value = 3;
+}
+
+message PlaceBidOnCharacterMarketResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OTHER_ERROR = 2;
+        OUT_OF_SYNC = 3;
+    }
+    
+    optional AccountPlayer instant_buy_player = 2;
+}
+
+message RemoveFromCharacterMarketRequest {
+    optional bytes encrypted_login_key = 1;
+    optional string player_name = 2;
+    optional int64 expected_cancel_fee = 3;
+}
+
+message RemoveFromCharacterMarketResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OTHER_ERROR = 2;
+        OUT_OF_SYNC = 3;
+    }
+}
+
+message CancelBidOnCharacterMarketRequest {
+    optional bytes encrypted_login_key = 1;
+    optional string player_name = 2;
+    optional int64 expected_cancel_fee = 3;
+}
+
+message CancelBidOnCharacterMarketResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OTHER_ERROR = 2;
+        OUT_OF_SYNC = 3;
+    }
+}
+
+message GetCharacterMarketOwnBidsRequest {
+    optional bytes encrypted_login_key = 1;
+}
+
+message GetCharacterMarketOwnBidsResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OTHER_ERROR = 2;
+        OUT_OF_SYNC = 3;
+    }
+    
+    repeated CharacterForSaleDetails character_for_sale_details = 2;
+}
+
+message UpdatePendingCoinsFromCharacterMarketRequest {
+    optional bytes encrypted_login_key = 1;
+}
+
+message UpdatePendingCoinsFromCharacterMarketResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OTHER_ERROR = 2;
+        OUT_OF_SYNC = 3;
+    }
+    
+    optional int64 total_transferable_kakele_coins = 2;
+}

@@ -1,0 +1,152 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+import "service/container.proto";
+
+message MarketEntryType {
+    enum Enum {
+        UNKNOWN = 0;
+        BUY = 1;
+        SELL = 2;
+    }
+}
+
+message MarketEntry {
+    optional int64 entry_id = 1;
+    optional MarketEntryType.Enum type = 2;
+    optional int32 available_count = 5;
+    optional int64 unix_time_seconds = 8;
+    
+    oneof item_or_kakele_coin {
+        Item item = 3;
+        int32 kakele_coins = 4;
+    }
+    
+    oneof price {
+        int32 gold_price_per_count = 6;
+        int32 kakele_coin_price_per_count = 7;
+    }
+}
+
+message OwnedMarketEntry {
+    optional MarketEntry entry = 1;
+    optional bool is_owner = 2;
+}
+
+message HistoricalMarketEntry {
+    optional MarketEntry entry = 1;
+    optional int64 last_update_unix_seconds = 2;
+}
+
+message MarketRequest {
+    optional int64 npc_map_id = 1;
+    
+    oneof request {
+        GetPlayerMarketEntries get_player_market_entries = 2;
+        GetMarketEntries get_market_entries = 3;
+        AddMarketEntry add_market_entry = 4;
+        AcceptMarketEntry accept_market_entry = 5;
+        CancelMarketEntry cancel_market_entry = 6;
+    }
+    
+    message GetPlayerMarketEntries {
+        
+    }
+    
+    message GetMarketEntries {
+        optional int32 item_id = 1;
+        optional MarketEntryType.Enum type = 2;
+    }
+    
+    message AddMarketEntry {
+        optional MarketEntryType.Enum type = 3;
+        optional bool use_kakele_coins_for_tax = 6;
+        optional bool allow_buying_on_other_servers = 7;
+        
+        oneof item_or_kakele_coin {
+            Item item = 1;
+            int32 kakele_coins = 2;
+        }
+        
+        oneof price {
+            int32 gold_price_per_count = 4;
+            int32 kakele_coin_price_per_count = 5;
+        }
+    }
+    
+    message AcceptMarketEntry {
+        optional int64 entry_id = 1;
+        optional int32 count = 2;
+    }
+    
+    message CancelMarketEntry {
+        optional int64 entry_id = 1;
+    }
+}
+
+message MarketResponse {
+    oneof response {
+        GetPlayerMarketEntries get_player_market_entries = 1;
+        GetMarketEntries get_market_entries = 2;
+        AddMarketEntry add_market_entry = 3;
+        AcceptMarketEntry accept_market_entry = 4;
+        CancelMarketEntry cancel_market_entry = 5;
+    }
+    
+    message GetPlayerMarketEntries {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN = 0;
+            SUCCESSFUL = 1;
+            OTHER_ERROR = 2;
+            MARKET_BUSY = 3;
+        }
+        
+        repeated MarketEntry entry = 2;
+        repeated HistoricalMarketEntry historical_entry = 3;
+    }
+    
+    message GetMarketEntries {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN = 0;
+            SUCCESSFUL = 1;
+            OTHER_ERROR = 2;
+            MARKET_BUSY = 3;
+        }
+        
+        repeated OwnedMarketEntry entry = 2;
+    }
+    
+    message AddMarketEntry {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN = 0;
+            SUCCESSFUL = 1;
+            OTHER_ERROR = 2;
+            MARKET_BUSY = 3;
+        }
+    }
+    
+    message AcceptMarketEntry {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN = 0;
+            SUCCESSFUL = 1;
+            OTHER_ERROR = 2;
+            OTHER_ERROR_CHECK_BANK = 3;
+            MARKET_BUSY = 4;
+        }
+    }
+    
+    message CancelMarketEntry {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN = 0;
+            SUCCESSFUL = 1;
+            OTHER_ERROR = 2;
+            MARKET_BUSY = 3;
+        }
+    }
+}

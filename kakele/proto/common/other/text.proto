@@ -1,0 +1,27 @@
+syntax = "proto2";
+
+package mmorpg.proto.common.other;
+
+message TextColor {
+    enum Enum {
+        UNKNOWN = 0;
+        WHITE = 1;
+        YELLOW = 2;
+        RED = 3;
+        GREEN = 4;
+        BLUE = 5;
+        PINK = 6;
+        PURPLE = 7;
+        GRAY = 8;
+        CYAN = 9;
+    }
+}
+
+message TextDuration {
+    enum Enum {
+        UNKNOWN = 0;
+        DURATION_10_SECONDS = 1;
+        DURATION_20_SECONDS = 2;
+        DURATION_60_SECONDS = 3;
+    }
+}

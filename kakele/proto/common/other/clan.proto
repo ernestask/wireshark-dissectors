@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+package mmorpg.proto.common.other;
+
+message Clan {
+    enum Enum {
+        UNKNOWN_CLAN = 0;
+        MONSTER = 1;
+        NPC = 2;
+        MODERATOR = 3;
+        PLAYER = 4;
+    }
+}

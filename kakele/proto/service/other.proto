@@ -1,0 +1,66 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+import "common/gamemap/weather.proto";
+
+message Language {
+    enum Enum {
+        UNKNOWN = 0;
+        ENGLISH = 1;
+        PORTUGUESE = 2;
+        SPANISH = 3;
+        POLISH = 4;
+    }
+}
+
+message Text {
+    optional string en = 1;
+    optional string pt = 2;
+    optional string es = 3;
+    optional string pl = 4;
+}
+
+message Announcement {
+    optional Text content = 1;
+    optional int64 created_unix_seconds = 2;
+}
+
+message Referral {
+    optional int64 referral_id = 1;
+    optional string name = 2;
+    optional int64 experience = 3;
+    optional int64 start_date_unix_seconds = 4;
+    optional bool claimed = 5;
+}
+
+message PartnershipTier {
+    enum Enum {
+        UNKNOWN = 0;
+        INCUBATOR = 5;
+        BRONZE = 1;
+        SILVER = 2;
+        GOLD = 3;
+        OTHER = 4;
+        BRONZE_PATRON = 6;
+        GOLD_PATRON = 7;
+    }
+}
+
+message SafeToTransferStatus {
+    enum Enum {
+        UNKNOWN = 0;
+        SAFE = 1;
+        HAS_GOLD_OR_KAKELE_COINS = 2;
+        HAS_MARKET_ITEMS = 3;
+        HAS_OUTGOING_MAIL = 4;
+        HAS_EXPIRED_HOUSE_ITEMS = 5;
+        HAS_HOUSE_OR_HOUSE_BID = 7;
+        DEPRECATED_HAS_MARKET_ENTRIES = 6;
+    }
+}
+
+message RegionWeather {
+    optional int32 region_id = 1;
+    optional common.gamemap.WeatherType.Enum weather_type = 2;
+}

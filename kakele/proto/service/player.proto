@@ -1,0 +1,21 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+import "common/other/clan.proto";
+import "common/other/vocation.proto";
+
+message AccountPlayer {
+    optional string name = 1;
+    optional int64 experience = 2;
+    optional common.other.Vocation.Enum vocation = 3;
+    optional common.other.Clan.Enum clan = 4;
+    optional int64 gold = 5;
+    optional int32 world_id = 6;
+    optional string world_replica = 7;
+    optional string world_replica_ip = 8;
+    optional int32 world_replica_port = 9;
+    optional bool world_is_open_pvp = 10;
+    optional bool name_locked = 11;
+    optional bool locked_in_character_market = 12;
+}

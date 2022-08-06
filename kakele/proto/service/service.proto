@@ -1,0 +1,50 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+message ClientHandshake {
+    optional bytes encrypted_session_key = 1;
+    optional int32 major_version = 2;
+    optional int32 minor_version = 3;
+    optional int32 patch_version = 4;
+    
+    optional Platform platform = 5;
+    enum Platform {
+        UNKNOWN_PLATFORM = 0;
+        DESKTOP = 1;
+        ANDROID = 2;
+        IOS = 3;
+        GOOGLE_PLAY = 4;
+        STEAM = 5;
+    }
+    
+    optional string opengl_version = 6;
+    optional bool opengl3_available = 7;
+    optional int32 max_texture_size_px = 8;
+    optional string device_name = 9;
+    optional string unique_identifier = 10;
+}
+
+message ServerHandshake {
+    optional string session_key_fingerprint = 1;
+    
+    optional Status status = 2;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        SUCCESSFUL_BUT_PATCH_MISMATCH = 2;
+        OLD_CLIENT_VERSION = 3;
+        SERVER_UPDATING = 4;
+        OTHER_ERROR = 5;
+    }
+}
+
+message PingRequest {
+    optional int64 ping_millis = 1;
+    optional int64 external_ping_millis = 2;
+    optional int32 fps = 3;
+}
+
+message PingResponse {
+    
+}

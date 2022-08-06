@@ -1,0 +1,146 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+message TokenSwapRequest {
+    oneof request {
+        GetWorldTokenPoolRequest get_world_token_pool = 1;
+        GetAccountTokenDepositInfoRequest get_account_token_deposit_info = 2;
+        SwapTokenRequest swap_token = 3;
+        WithdrawTokenRequest withdraw_token = 4;
+        SetAccountTokenAddressRequest set_account_token_address = 5;
+        DepositTokenRequest deposit_token = 6;
+    }
+}
+
+message TokenSwapResponse {
+    oneof response {
+        GetWorldTokenPoolResponse get_world_token_pool = 1;
+        GetAccountTokenDepositInfoResponse get_account_token_deposit_info = 2;
+        SwapTokenResponse swap_token = 3;
+        WithdrawTokenResponse withdraw_token = 4;
+        SetAccountTokenAddressResponse set_account_token_address = 5;
+        DepositTokenResponse deposit_token = 6;
+    }
+}
+
+message GetWorldTokenPoolRequest {
+    optional bytes encrypted_login_key = 1;
+    optional int32 world_id = 2;
+    optional string world_replica = 3;
+}
+
+message GetWorldTokenPoolResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OUT_OF_SYNC = 2;
+        OTHER_ERROR = 3;
+    }
+    
+    optional double available_tokens = 2;
+    optional double future_available_tokens = 3;
+    optional int64 available_gold = 4;
+}
+
+message GetAccountTokenDepositInfoRequest {
+    optional bytes encrypted_login_key = 1;
+}
+
+message GetAccountTokenDepositInfoResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OUT_OF_SYNC = 2;
+        OTHER_ERROR = 3;
+    }
+    
+    optional string internal_token_address = 2;
+    optional string external_token_address = 4;
+    optional double token_balance = 3;
+}
+
+message SwapTokenRequest {
+    optional bytes encrypted_login_key = 1;
+    optional string name = 2;
+    optional bool allow_one_percent_difference = 7;
+    
+    oneof swap_input {
+        int64 gold = 3;
+        double tokens = 4;
+    }
+    
+    oneof swap_output {
+        int64 expected_gold = 5;
+        double expected_tokens = 6;
+    }
+}
+
+message SwapTokenResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OUT_OF_SYNC = 2;
+        PRICE_CHANGE = 3;
+        OTHER_ERROR = 4;
+    }
+    
+    optional int64 player_gold = 2;
+    optional double account_tokens = 3;
+}
+
+message WithdrawTokenRequest {
+    optional bytes encrypted_login_key = 1;
+    optional double amount = 2;
+}
+
+message WithdrawTokenResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OUT_OF_SYNC = 2;
+        OTHER_ERROR = 3;
+        SERVER_BUSY = 4;
+    }
+    
+    optional string withdraw_transaction = 2;
+}
+
+message SetAccountTokenAddressRequest {
+    optional bytes encrypted_login_key = 1;
+    optional string external_token_address = 2;
+}
+
+message SetAccountTokenAddressResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OUT_OF_SYNC = 2;
+        OTHER_ERROR = 3;
+        ALREADY_IN_USE = 4;
+    }
+}
+
+message DepositTokenRequest {
+    optional bytes encrypted_login_key = 1;
+    optional string transaction_identifier = 2;
+}
+
+message DepositTokenResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OUT_OF_SYNC = 2;
+        OTHER_ERROR = 3;
+        PENDING = 4;
+        ALREADY_CLAIMED = 5;
+    }
+    
+    optional double token_credit = 2;
+}

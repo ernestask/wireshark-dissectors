@@ -1,0 +1,12 @@
+syntax = "proto2";
+
+package mmorpg.proto.common.other;
+
+message Energy {
+    enum Enum {
+        NONE = 0;
+        NATURE = 1;
+        LIGHT = 2;
+        DARK = 3;
+    }
+}

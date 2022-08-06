@@ -1,0 +1,93 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+message ContainerType {
+    enum Enum {
+        UNKNOWN = 0;
+        LOOT = 1;
+        BACKPACK = 2;
+        TRASH = 3;
+    }
+}
+
+message SortStrategy {
+    enum Enum {
+        UNKNOWN = 0;
+        LEVEL = 1;
+        RARITY = 2;
+        TYPE = 3;
+    }
+}
+
+message Item {
+    optional int32 item_id = 1;
+    optional int32 index = 2;
+    optional int32 count = 3;
+    optional AdditionalAttributes attributes = 4;
+}
+
+message Container {
+    repeated Item item = 1;
+}
+
+message AdditionalAttributes {
+    optional bool bound = 1;
+    optional int64 remaining_milliseconds = 2;
+    
+    oneof upgraded {
+        UpgradedEquipmentAttributes upgraded_equipment_attributes = 3;
+        UpgradedFoodAttributes upgraded_food_attributes = 4;
+    }
+    
+    message UpgradedEquipmentAttributes {
+        optional int32 attack = 1;
+        optional int32 armor = 2;
+        optional int32 magic = 3;
+        optional int32 bless = 4;
+    }
+    
+    message UpgradedFoodAttributes {
+        optional int32 health = 1;
+        optional int32 mana = 2;
+    }
+}
+
+message GenericContainerRequest {
+    oneof request {
+        List list = 2;
+        Deposit deposit = 3;
+        Withdraw withdraw = 4;
+        Organize organize = 5;
+    }
+    
+    message List {
+        
+    }
+    
+    message Deposit {
+        optional Item backpack_item = 1;
+        optional int32 container_slot_index = 2;
+    }
+    
+    message Withdraw {
+        optional Item container_item = 1;
+        optional int32 backpack_slot_index = 2;
+    }
+    
+    message Organize {
+        optional Item container_item = 1;
+        optional int32 container_slot_index = 2;
+    }
+}
+
+message GenericContainerResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ERROR = 2;
+    }
+    
+    optional Container contents = 2;
+}

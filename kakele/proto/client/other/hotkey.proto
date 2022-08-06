@@ -1,0 +1,50 @@
+syntax = "proto2";
+
+package mmorpg.proto.client.other;
+
+message Hotkey {
+    optional int32 x = 4;
+    optional int32 y = 5;
+    optional string keyboard_key = 6;
+    
+    optional HotkeySize size = 7;
+    enum HotkeySize {
+        DEFAULT_SIZE = 0;
+        BIGGER = 1;
+        LARGE = 2;
+    }
+    
+    optional bool hide_if_cannot_use = 8;
+    optional bool hide_if_on_battle = 9;
+    optional bool hide_if_on_pvp = 10;
+    
+    oneof id {
+        int32 item_id = 1;
+        int32 spell_id = 2;
+    }
+    
+    oneof payload {
+        ItemPayload item_payload = 3;
+    }
+    
+    message ItemPayload {
+        optional FoodAttributes food_attributes = 1;
+        optional EquipmentAttributes equipment_attributes = 2;
+    }
+    
+    message FoodAttributes {
+        optional int32 health = 1;
+        optional int32 mana = 2;
+    }
+    
+    message EquipmentAttributes {
+        optional int32 attack = 1;
+        optional int32 armor = 2;
+        optional int32 magic = 3;
+        optional int32 bless = 4;
+    }
+}
+
+message Hotkeys {
+    repeated Hotkey hotkey = 1;
+}

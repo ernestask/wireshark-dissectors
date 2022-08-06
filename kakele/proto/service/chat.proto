@@ -1,0 +1,71 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+import "service/moderation.proto";
+import "service/other.proto";
+import "service/outfit.proto";
+
+message ChatCanonicalDestination {
+    optional Type type = 1;
+    enum Type {
+        UNKNOWN = 0;
+        LOCAL = 1;
+        LANGUAGE = 2;
+        HELP = 3;
+        TRADE = 4;
+        GUILD = 5;
+    }
+    
+    optional Language.Enum language = 2;
+}
+
+message ChatRequest {
+    oneof content {
+        string value = 1;
+        string ascii_devel_command = 2;
+        string ascii_test_command = 3;
+    }
+    
+    oneof destination {
+        ChatCanonicalDestination canonical = 4;
+        string player = 5;
+    }
+}
+
+message ChatResponse {
+    optional string player_source = 5;
+    optional int32 level = 6;
+    optional NameColor.Enum name_color = 8;
+    optional ModerationAccess.Enum moderation_access = 9;
+    optional float toxicity = 10;
+    
+    oneof content {
+        string value = 1;
+        ErrorType error = 2;
+    }
+    
+    oneof error_payload {
+        MutedErrorPayload muted_error = 7;
+    }
+    
+    oneof destination {
+        ChatCanonicalDestination canonical = 3;
+        string player = 4;
+    }
+    
+    message MutedErrorPayload {
+        optional int32 duration_minutes = 1;
+        optional string reason = 2;
+    }
+    
+    enum ErrorType {
+        UNKNOWN = 0;
+        TOO_MANY_MESSAGES = 1;
+        INVALID_PLAYER = 2;
+        OTHER_ERROR = 3;
+        MUTED = 4;
+        LEVEL_TOO_LOW = 5;
+        TOXIC = 6;
+    }
+}

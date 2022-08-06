@@ -1,0 +1,44 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+import "common/other/light.proto";
+
+message NameColor {
+    enum Enum {
+        UNKNOWN = 0;
+        GRAY = 1;
+        DARK_RED = 2;
+        LIGHT_GREEN = 3;
+        LIGHT_BLUE = 4;
+        PINK = 5;
+        YELLOW = 6;
+        BROWN = 7;
+        BLUE_GRAY = 8;
+        LIME = 9;
+        INDIGO = 10;
+        PURPLE = 11;
+        TEAL = 12;
+        ORANGE = 13;
+        WINE = 14;
+        NEON = 15;
+        IVORY = 16;
+        AQUA = 17;
+        FUCHSIA = 18;
+    }
+}
+
+message PlayerOutfit {
+    optional int32 outfit_id = 1;
+    optional int32 primary_color_index = 9;
+    optional int32 secondary_color_index = 10;
+    optional int32 skin_color_index = 11;
+    optional common.other.Light.ColorType light_color = 7;
+    optional NameColor.Enum name_color = 8;
+    
+    reserved 2, 3, 4, 5, 6;
+}
+
+message Outfits {
+    repeated int32 outfit_id = 1;
+}

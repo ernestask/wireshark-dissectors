@@ -1,0 +1,22 @@
+syntax = "proto2";
+
+package mmorpg.proto.common.gamemap;
+
+message TileAttributes {
+    optional bool teleport = 1;
+    optional bool fire = 2;
+    optional bool poison = 3;
+    optional bool mailbox = 4;
+    optional bool guild_banner = 5;
+}
+
+message TileParameterValue {
+    oneof parameter_value {
+        string value = 1;
+        PlayerGuild player_guild = 2;
+    }
+    
+    message PlayerGuild {
+        
+    }
+}

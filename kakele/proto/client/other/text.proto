@@ -1,0 +1,10 @@
+syntax = "proto2";
+
+package mmorpg.proto.client.other;
+
+message ObfuscatedText {
+    optional string en = 1;
+    optional string pt = 2;
+    optional string es = 3;
+    optional string pl = 4;
+}

@@ -1,0 +1,65 @@
+syntax = "proto2";
+
+package mmorpg.proto.common.creature;
+
+message Flag {
+    optional Type type = 1;
+    enum Type {
+        UNKNOWN = 0;
+        INCREASE_SPEED = 1;
+        INCREASE_ATTACK_SPEED = 2;
+        BLOCK_ATTACKS = 3;
+        BLOCK_SPELLS = 4;
+        PVP_BATTLE = 5;
+        PVP_ARENA = 6;
+        INCREASE_ARMOR = 7;
+        RESIST_SPELL_DAMAGE = 8;
+        DECREASE_SPEED = 9;
+        BURNING = 10;
+        POISONED = 11;
+        ADDING_MANA = 12;
+        ADDING_HEALTH = 13;
+        INCREASE_ATTACK = 14;
+        MANA_SHIELD = 15;
+        ADD_RANGE = 16;
+        INCREASE_MIN_ATTACK = 17;
+        REFLECT_ATTACK = 18;
+        PROTECTION_ZONE = 19;
+        HEALTH_LEECH = 20;
+        CONQUEROR = 21;
+        GOLDEN = 22;
+        INCREASE_STANDING_ARMOR = 23;
+        INVISIBLE = 24;
+        HUNTED = 25;
+        REFLECT_DECREASE_SPEED = 26;
+        DECREASE_ARMOR = 27;
+        DECREASE_ATTACK_SPEED = 28;
+        DECREASE_ATTACK = 29;
+        RESUSCITATE = 30;
+        INCREASE_STANDING_REGENERATION = 31;
+        REDUCE_SPELL_POWER = 32;
+        SUMMON_SYNERGY = 33;
+        CALLED = 34;
+        TRAINING = 35;
+        RESUSCITATED = 36;
+        STANDING_ANTI_SWAP = 37;
+        CURSED = 38;
+        LURED = 39;
+        BATTLE = 62;
+    }
+    
+    repeated Value value = 2;
+    message Value {
+        optional int32 value = 1;
+        optional int32 duration_milliseconds = 2;
+        
+        optional Source source = 3;
+        enum Source {
+            UNKNOWN = 0;
+            SPELL = 1;
+            EQUIPMENT = 2;
+            OTHER = 3;
+            PET = 4;
+        }
+    }
+}

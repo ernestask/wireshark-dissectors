@@ -1,0 +1,16 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+import "common/item/item.proto";
+import "service/container.proto";
+
+message Equipment {
+    optional int32 item_id = 1;
+    optional common.item.Slot.Enum slot = 2;
+    optional AdditionalAttributes attributes = 3;
+}
+
+message Equipments {
+    repeated Equipment equipment = 1;
+}

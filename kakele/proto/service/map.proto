@@ -1,0 +1,288 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+import "common/creature/flag.proto";
+import "common/gamemap/position.proto";
+import "common/gamemap/tile_stack.proto";
+import "common/gamemap/weather.proto";
+import "common/other/energy.proto";
+import "common/other/text.proto";
+import "common/other/effect.proto";
+import "service/container.proto";
+import "service/creature.proto";
+import "service/outfit.proto";
+import "service/other.proto";
+
+message MapRequest {
+    oneof request {
+        MoveRequest move = 1;
+        CastSpellRequest cast_spell = 2;
+        SetAttackRequest set_attack = 3;
+        MapUseRequest map_use = 4;
+    }
+}
+
+message MapResponse {
+    oneof response {
+        MoveResponse move = 1;
+        ProjectileResponse projectile = 2;
+        ExplosionResponse explosion = 3;
+        DamageResponse damage = 4;
+        CreatureFlagUpdatesResponse creature_flag_updates = 5;
+        PlayerFlagUpdatesResponse player_flag_updates = 6;
+        CastSpellResponse cast_spell = 8;
+        NewCreaturesResponse new_creatures = 7;
+        HealthRegenResponse health_regen = 9;
+        RemoveCreatureResponse remove_creature = 10;
+        HealResponse heal = 11;
+        CreatureDiedResponse creature_died = 12;
+        PlayerDiedResponse player_died = 13;
+        AddExperienceResponse add_experience = 14;
+        LevelUpResponse level_up = 15;
+        PlayerChangedOutfitResponse player_changed_outfit = 16;
+        MoveErrorResponse move_error = 17;
+        TeleportResponse teleport = 18;
+        MapUseResponse map_use = 19;
+        ManaRegenResponse mana_regen = 20;
+        SetOtherPlayerQuestStateResponse set_other_player_quest_state = 21;
+        NewActiveMapEventResponse new_active_map_event = 22;
+        SetTileResponse set_tile = 23;
+        SetMapItemResponse set_map_item = 24;
+        UnjustKillResponse unjust_kill = 25;
+        MapGenericMessageResponse map_generic_message = 26;
+        UpdatePetExperienceResponse update_pet_experience = 27;
+        MapEffectResponse map_effect = 28;
+        WarnRespawnResponse warn_respawn = 29;
+        UpdateEnergyResponse update_energy = 30;
+        PetCosmeticUpdateResponse pet_cosmetic_update = 31;
+        RegionWeatherUpdateResponse region_weather_update = 32;
+    }
+}
+
+message MoveRequest {
+    optional common.gamemap.Direction.Enum direction = 1;
+}
+
+message CastSpellRequest {
+    optional int64 target_map_id = 1;
+    optional int32 spell_id = 2;
+}
+
+message SetAttackRequest {
+    optional int64 creature_map_id = 1;
+}
+
+message MapUseRequest {
+    optional common.gamemap.Position position = 1;
+}
+
+message MoveResponse {
+    optional int64 creature_map_id = 1;
+    optional common.gamemap.Direction.Enum direction = 2;
+    optional bool is_action = 3;
+}
+
+message NewCreaturesResponse {
+    repeated Creature creature = 1;
+}
+
+message RemoveCreatureResponse {
+    optional int64 creature_map_id = 1;
+}
+
+message HealthRegenResponse {
+    optional int64 player_map_id = 1;
+    optional int32 new_health = 2;
+}
+
+message ManaRegenResponse {
+    optional int32 new_mana = 1;
+}
+
+message ProjectileResponse {
+    optional common.gamemap.Position from_position = 1;
+    optional common.gamemap.Position to_position = 2;
+    optional int32 projectile_id = 3;
+    optional int32 explosion_id = 4;
+    optional int32 area_id = 5 [default = 1];
+    optional bool shake = 8;
+    
+    oneof source_or_target {
+        bool is_source = 6;
+        bool is_target = 7;
+    }
+}
+
+message ExplosionResponse {
+    optional common.gamemap.Position position = 1;
+    optional int32 explosion_id = 2;
+    optional int32 area_id = 3 [default = 1];
+    optional bool is_source = 4;
+    optional bool shake = 5;
+}
+
+message DamageResponse {
+    optional int64 creature_map_id = 1;
+    optional int32 physical_damage = 2;
+    optional int32 direct_damage = 3;
+    optional int32 magical_damage = 4;
+    optional int32 mana_damage = 5;
+}
+
+message CreatureDiedResponse {
+    optional int64 creature_map_id = 1;
+}
+
+message PlayerDiedResponse {
+    optional int64 experience_lost = 1;
+}
+
+message AddExperienceResponse {
+    optional int64 experience = 1;
+    optional int64 player_map_id = 2;
+}
+
+message LevelUpResponse {
+    optional int64 creature_map_id = 1;
+    optional int32 new_level = 2;
+}
+
+message CreatureFlagUpdatesResponse {
+    optional int64 creature_map_id = 1;
+    optional int64 flag_bitmask = 2;
+    optional sint32 flags_speed_modifier_percent = 3;
+}
+
+message PlayerFlagUpdatesResponse {
+    repeated common.creature.Flag flag = 1;
+}
+
+message PlayerChangedOutfitResponse {
+    optional int64 player_map_id = 1;
+    optional PlayerOutfit outfit = 2;
+}
+
+message MoveErrorResponse {
+    optional Reason reason = 1;
+    enum Reason {
+        UNKNOWN = 0;
+        TOO_SOON_OR_BLOCKED = 1;
+        HOUSE = 2;
+    }
+}
+
+message HealResponse {
+    optional int64 creature_map_id = 1;
+    optional int32 health = 2;
+    optional int32 mana = 3;
+}
+
+message TeleportResponse {
+    optional common.gamemap.Position player_position = 1;
+    repeated Creature creature = 2;
+}
+
+message MapUseResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        NOTHING_HAPPENS = 2;
+        ERROR = 3;
+        LOCKED = 4;
+    }
+}
+
+message CastSpellResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ERROR = 2;
+        EXHAUSTED = 3;
+        STACK_ERROR = 4;
+    }
+    
+    optional Exhaust.Type set_exhaust_type = 2;
+}
+
+message SetOtherPlayerQuestStateResponse {
+    optional int64 player_map_id = 1;
+}
+
+message NewActiveMapEventResponse {
+    optional MapEvent event = 1;
+}
+
+message MapTile {
+    optional common.gamemap.Position position = 3;
+    map<string, string> parameters = 4;
+    
+    oneof new_value {
+        common.gamemap.TileStack tile = 1;
+        bool use_default = 2;
+    }
+}
+
+message SetTileResponse {
+    repeated MapTile tile = 1;
+}
+
+message MapItems {
+    repeated Item item = 1;
+    optional common.gamemap.Position position = 2;
+}
+
+message SetMapItemResponse {
+    repeated MapItems tile = 1;
+}
+
+message UnjustKillResponse {
+    optional int64 player_map_id = 1;
+    optional int64 time_unix_seconds = 2;
+    optional string killed_player = 3;
+    optional PvpInfo.PenaltyState pvp_penalty = 4;
+}
+
+message MapGenericMessageResponse {
+    optional Text message = 1;
+    optional common.other.TextColor.Enum color = 2;
+    optional common.gamemap.Position position = 3;
+    optional common.other.TextDuration.Enum duration = 4;
+}
+
+message UpdatePetExperienceResponse {
+    optional int32 pet_id = 1;
+    optional int64 experience = 2;
+}
+
+message MapEffectResponse {
+    optional common.other.EffectType.Enum effect = 1;
+    optional common.gamemap.Position position = 2;
+    optional common.other.EffectDuration.Enum duration = 3;
+}
+
+message MapEvent {
+    optional int32 map_event_id = 1;
+    optional int64 active_until_unix_seconds = 2;
+}
+
+message WarnRespawnResponse {
+    optional common.gamemap.Position position = 1;
+}
+
+message UpdateEnergyResponse {
+    optional int64 player_map_id = 1;
+    optional common.other.Energy.Enum energy = 2;
+}
+
+message PetCosmeticUpdateResponse {
+    optional int64 pet_map_id = 1;
+    optional string name = 2;
+    optional NameColor.Enum name_color = 3;
+}
+
+message RegionWeatherUpdateResponse {
+    repeated RegionWeather weather = 1;
+}

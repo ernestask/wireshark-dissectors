@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+package mmorpg.proto.client.other;
+
+message Area {
+    optional int32 id = 1;
+    
+    repeated Position position = 2;
+    message Position {
+        optional int32 x = 1;
+        optional int32 y = 2;
+    }
+}

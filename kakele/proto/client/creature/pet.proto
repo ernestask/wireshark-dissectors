@@ -1,0 +1,34 @@
+syntax = "proto2";
+
+package mmorpg.proto.client.creature;
+
+import "common/other/light.proto";
+import "client/other/text.proto";
+
+message Pet {
+    optional int32 id = 1;
+    optional other.ObfuscatedText name = 2;
+    optional other.ObfuscatedText description = 7;
+    optional bool flier = 3;
+    
+    optional Cost cost = 4;
+    message Cost {
+        optional int64 gold = 1;
+        optional int64 kakele_coins = 2;
+        
+        repeated ItemCost item_cost = 3;
+        message ItemCost {
+            optional int32 item_id = 1;
+            optional int32 count = 2;
+        }
+    }
+    
+    optional int64 fast_pass_kakele_coins = 5;
+    optional common.other.Light light = 6;
+    
+    repeated Spell spell = 8;
+    message Spell {
+        optional int32 level = 1;
+        optional other.ObfuscatedText description = 2;
+    }
+}

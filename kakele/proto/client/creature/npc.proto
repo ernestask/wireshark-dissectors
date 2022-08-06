@@ -1,0 +1,41 @@
+syntax = "proto2";
+
+package mmorpg.proto.client.creature;
+
+import "client/action/requirement.proto";
+import "client/other/text.proto";
+import "common/creature/npc.proto";
+
+message Npc {
+    optional int32 id = 1;
+    optional other.ObfuscatedText name = 2;
+    
+    repeated SpeechState speech_state = 3;
+    message SpeechState {
+        optional int32 state_id = 1;
+        optional other.ObfuscatedText phrase = 2;
+        
+        repeated SpeechOption speech_option = 3;
+        message SpeechOption {
+            optional other.ObfuscatedText phrase = 1;
+            repeated action.Requirement requirement = 2;
+            optional int32 to_speech_state_id = 3;
+            optional bool updates_quest = 4;
+        }
+    }
+    
+    optional bool flier = 8;
+    optional int32 minimap_hint_id = 14;
+    
+    oneof shop {
+        common.creature.ItemShop item_shop = 4;
+        common.creature.SpellShop spell_shop = 5;
+        common.creature.BankShop bank_shop = 6;
+        common.creature.OutfitShop outfit_shop = 7;
+        common.creature.BlacksmithShop blacksmith_shop = 9;
+        common.creature.HerbalistShop herbalist_shop = 10;
+        common.creature.PetShop pet_shop = 11;
+        common.creature.MarketBroker market_broker = 12;
+        common.creature.BlesserShop blesser_shop = 13;
+    }
+}

@@ -1,0 +1,111 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+message ModerationAccess {
+    enum Enum {
+        UNKNOWN = 0;
+        PLAYER = 1;
+        TUTOR = 2;
+        JUNIOR_VOLUNTEER_AGENT = 3;
+        VOLUNTEER_AGENT = 4;
+        STAFF_COMMUNITY_MANAGER = 5;
+        ADMIN = 6;
+    }
+}
+
+message ModeratorRequest {
+    oneof payload {
+        string ascii_command = 1;
+        Kick kick = 2;
+        GoTo go_to = 3;
+        Temple temple = 4;
+        Mute mute = 5;
+        Said said = 6;
+        SameNetwork network = 7;
+        Captcha captcha = 8;
+        ResetPetName reset_pet_name = 10;
+    }
+    
+    message Kick {
+        optional string player_name = 1;
+    }
+    
+    message GoTo {
+        oneof go_to {
+            string player_name = 1;
+            string temple = 2;
+        }
+    }
+    
+    message Temple {
+        optional string player_name = 1;
+    }
+    
+    message Mute {
+        optional string player_name = 1;
+        optional int32 duration_hours = 2;
+        optional string reason = 3;
+    }
+    
+    message Said {
+        optional string player_name = 1;
+        optional string message = 2;
+    }
+    
+    message SameNetwork {
+        optional string player_name = 1;
+    }
+    
+    message Captcha {
+        optional string player_name = 1;
+    }
+    
+    message ResetPetName {
+        optional string player_name = 1;
+        optional int32 pet_id = 2;
+    }
+}
+
+message ModeratorResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        OTHER_ERROR = 1;
+        INSUFFICIENT_PRIVILEDGES = 2;
+        SUCCESSFUL = 3;
+    }
+    
+    optional string additional_payload = 2;
+}
+
+message ModerationEntry {
+    optional Reason reason = 1;
+    enum Reason {
+        UNKNOWN_REASON = 0;
+        OTHER = 1;
+        COMMUNITY_ABUSE = 2;
+        CHEATING = 3;
+        DESTRUCTIVE_BEHAVIOR = 4;
+        NAME_LOCK = 5;
+        CHANGE_NAME = 6;
+        CHANGE_EMAIL = 7;
+        TICKET = 8;
+    }
+    
+    optional Type type = 2;
+    enum Type {
+        UNKNOWN_TYPE = 0;
+        WARNING = 1;
+        BAN = 2;
+        INFO = 3;
+    }
+    
+    optional string additional_information = 3;
+    optional int64 created_unix_seconds = 4;
+    optional string author_name = 9;
+    optional string temporary_player_name = 7;
+    optional string public_comments = 8;
+    
+    reserved 5, 6;
+}

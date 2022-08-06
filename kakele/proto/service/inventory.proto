@@ -1,0 +1,332 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+import "common/gamemap/position.proto";
+import "common/item/item.proto";
+import "common/other/light.proto";
+import "common/quest/quest.proto";
+import "service/container.proto";
+import "service/creature.proto";
+import "service/equipment.proto";
+import "service/outfit.proto";
+
+message InventoryRequest {
+    oneof request {
+        UseItemRequest use_item = 1;
+        MoveItemRequest move_item = 2;
+        ChangeOutfitRequest change_outfit = 3;
+        EquipItemRequest equip_item = 4;
+        ClaimRewardBoxRequest claim_reward_box = 5;
+        CollectAllLootRequest collect_all_loot = 6;
+        ClaimDailyRewardRequest claim_daily_reward = 7;
+        ChangeLightRequest change_light = 8;
+        ChangeNameColorRequest change_name_color = 9;
+        DropItemRequest drop_item = 10;
+        DeleteAllLootRequest delete_all_loot = 11;
+        ChangePetRequest change_pet = 12;
+        ChangePetNameRequest change_pet_name = 19;
+        ChangePetNameColorRequest change_pet_name_color = 20;
+        DeliverQuestItemRequest deliver_quest_item = 21;
+        OrganizeContainerRequest organize_container = 22;
+    }
+}
+
+message InventoryResponse {
+    oneof response {
+        AddItemResponse add_item = 1;
+        MoveItemResponse move_item = 2;
+        EquipItemResponse equip_item = 3;
+        UseItemResponse use_item = 4;
+        SetQuestStateResponse set_quest_state = 5;
+        ClaimRewardBoxResponse claim_reward_box = 7;
+        ConsumeItemsInBackpackResponse consume_items_in_backpack = 8;
+        CollectAllLootResponse collect_all_loot = 9;
+        ClaimDailyRewardResponse claim_daily_reward = 10;
+        ConsumeGoldResponse consume_gold = 11;
+        ChangeLightResponse change_light = 12;
+        ChangeNameColorResponse change_name_color = 13;
+        StaminaUpdateResponse stamina_update = 14;
+        DropItemResponse drop_item = 16;
+        DeleteAllLootResponse delete_all_loot = 17;
+        ChangePetResponse change_pet = 18;
+        ChangePetNameResponse change_pet_name = 19;
+        ChangePetNameColorResponse change_pet_name_color = 20;
+        DeliverQuestItemResponse deliver_quest_item = 21;
+        OrganizeContainerResponse organize_container = 22;
+    }
+    
+    reserved 15;
+}
+
+message ChangeOutfitRequest {
+    optional int32 outfit_id = 1;
+    optional int32 primary_color_index = 2;
+    optional int32 secondary_color_index = 3;
+    optional int32 skin_color_index = 4;
+}
+
+message MoveItemRequest {
+    optional Item item = 1;
+    optional ContainerType.Enum from_container = 2;
+    optional int32 to_slot_index = 3;
+    optional ContainerType.Enum to_container = 4;
+}
+
+message EquipItemRequest {
+    optional Drop drop = 1;
+    message Drop {
+        optional int32 drop_to_slot_index = 1;
+        optional int32 item_id_to_drop = 2;
+        optional common.item.Slot.Enum slot_to_drop = 3;
+    }
+    
+    optional Equip equip = 2;
+    message Equip {
+        optional int32 equip_from_slot_index = 1;
+        optional Equipment equipment_to_equip = 2;
+    }
+}
+
+message UseItemRequest {
+    optional Item item = 1;
+}
+
+message ClaimRewardBoxRequest {
+    optional int32 quest_id = 1;
+    optional int32 reward_index = 2;
+}
+
+message CollectAllLootRequest {
+    
+}
+
+message ClaimDailyRewardRequest {
+    optional int32 item_id = 1;
+}
+
+message ChangeLightRequest {
+    optional common.other.Light.ColorType light_color = 1;
+}
+
+message ChangeNameColorRequest {
+    optional NameColor.Enum name_color = 1;
+}
+
+message DropItemRequest {
+    optional Item loot_item = 1;
+}
+
+message AddItemResponse {
+    optional Container items = 1;
+    optional int32 gold = 2;
+    optional ContainerType.Enum container = 3;
+    optional common.gamemap.Position drop_position = 4;
+}
+
+message MoveItemResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ERROR = 2;
+    }
+}
+
+message EquipItemResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ERROR = 2;
+    }
+    
+    optional Item dropped_item = 2;
+}
+
+message UseItemResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ERROR = 2;
+        EXHAUSTED = 3;
+    }
+    
+    optional Exhaust.Type set_exhaust_type = 2;
+}
+
+message SetQuestStateResponse {
+    optional int32 quest_id = 1;
+    optional common.quest.QuestState quest_state = 2;
+}
+
+message ClaimRewardBoxResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        BACKPACK_FULL = 2;
+        ERROR = 3;
+    }
+    
+    optional Container items = 2;
+}
+
+message ConsumeItemsInBackpackResponse {
+    repeated Item item = 1;
+}
+
+message CollectAllLootResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        BACKPACK_IS_FULL = 2;
+    }
+    
+    optional Container items_to_add = 2;
+}
+
+message ClaimDailyRewardResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        BACKPACK_IS_FULL = 2;
+        ERROR = 3;
+    }
+    
+    optional Container items_to_add = 2;
+}
+
+message ConsumeGoldResponse {
+    optional int64 gold_amount = 1;
+}
+
+message ChangeLightResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ERROR = 2;
+    }
+}
+
+message ChangeNameColorResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ERROR = 2;
+    }
+}
+
+message StaminaUpdateResponse {
+    optional int32 stamina_left_minutes = 1;
+}
+
+message DropItemResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ERROR = 2;
+    }
+}
+
+message DeleteAllLootRequest {
+    
+}
+
+message DeleteAllLootResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+    }
+}
+
+message ChangePetRequest {
+    optional int32 pet_id = 1;
+}
+
+message ChangePetResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OTHER_ERROR = 2;
+    }
+}
+
+message ChangePetNameRequest {
+    optional string name = 1;
+    optional int32 pet_id = 2;
+}
+
+message ChangePetNameResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OTHER_ERROR = 2;
+    }
+}
+
+message ChangePetNameColorRequest {
+    optional NameColor.Enum name_color = 1;
+    optional int32 pet_id = 2;
+}
+
+message ChangePetNameColorResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OTHER_ERROR = 2;
+    }
+}
+
+message DeliverQuestItemRequest {
+    optional int32 quest_id = 3;
+    
+    oneof item {
+        Item backpack_item = 1;
+        Item loot_item = 2;
+    }
+}
+
+message DeliverQuestItemResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OTHER_ERROR = 2;
+    }
+}
+
+message OrganizeContainerRequest {
+    optional Type type = 1;
+    enum Type {
+        UNKNOWN_TYPE = 0;
+        BACKPACK = 1;
+        LOOT = 2;
+        BANK = 3;
+        HOUSE_VAULT = 4;
+    }
+    
+    optional SortStrategy.Enum strategy = 2;
+    optional int32 house_id = 3;
+}
+
+message OrganizeContainerResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN_STATUS = 0;
+        OTHER_ERROR = 1;
+        SUCCESSFUL = 2;
+    }
+    
+    optional Container items = 2;
+}

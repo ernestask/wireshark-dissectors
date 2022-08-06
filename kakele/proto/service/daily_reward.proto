@@ -1,0 +1,9 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+message DailyRewardInfo {
+    optional int32 login_points = 1;
+    optional int64 last_login_unix_seconds = 2;
+    optional bool claimed_for_today = 3;
+}

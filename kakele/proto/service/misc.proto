@@ -1,0 +1,643 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+import "common/gamemap/position.proto";
+import "common/gamemap/weather.proto";
+import "common/other/text.proto";
+import "common/other/user_interface.proto";
+import "common/other/vocation.proto";
+import "service/boost.proto";
+import "service/creature.proto";
+import "service/container.proto";
+import "service/daily_reward.proto";
+import "service/equipment.proto";
+import "service/outfit.proto";
+import "service/map.proto";
+import "service/moderation.proto";
+import "service/service.proto";
+import "service/spell.proto";
+import "service/quest.proto";
+import "service/other.proto";
+import "service/payment.proto";
+
+message Friend {
+    optional string name = 1;
+    optional bool online = 2;
+    
+    optional Icon icon = 3;
+    enum Icon {
+        UNKNOWN_ICON = 0;
+        HEART = 1;
+        SKULL = 2;
+    }
+}
+
+message Report {
+    optional int64 id = 1;
+    optional string creator_name = 2;
+    
+    repeated ReportMessage report_message = 3;
+    message ReportMessage {
+        optional string player_name = 1;
+        optional string content = 2;
+        optional int64 created_unix_seconds = 3;
+    }
+    
+    optional bool closed = 4;
+    optional bool auto_closed = 7;
+    optional Type.Enum type = 5;
+    
+    optional AdditionalInfo additional_info = 6;
+    message AdditionalInfo {
+        optional string target_player_name = 1;
+        
+        oneof info {
+            ChatInfo chat = 2;
+        }
+        
+        message ChatInfo {
+            optional string message = 1;
+            optional bool private = 2;
+        }
+    }
+    
+    message Type {
+        enum Enum {
+            UNKNOWN_TYPE = 0;
+            CHEATER = 1;
+            CHAT_ABUSE = 2;
+            BAD_TRANSLATION = 3;
+            GLITCH = 4;
+            OTHER = 5;
+        }
+    }
+}
+
+message MailEntry {
+    optional string sender_name = 1;
+    optional string receiver_name = 2;
+    optional int64 created_unix_seconds = 3;
+    optional int64 updated_unix_seconds = 4;
+    
+    optional State state = 5;
+    enum State {
+        UNKNOWN = 0;
+        PENDING = 1;
+        CANCELLED = 2;
+        COMPLETED = 3;
+    }
+    
+    optional string message = 6;
+    optional int64 gold = 7;
+    optional int64 kakele_coins = 8;
+    repeated Item item = 9;
+}
+
+message MiscRequest {
+    oneof request {
+        PingRequest ping = 1;
+        AuthenticateRequest authenticate = 2;
+        LogoutRequest logout = 3;
+        GetPlayersOnlineRequest get_players_online = 4;
+        SetMiscSettingsRequest set_misc_settings = 5;
+        ServerBoostRequest server_boost = 6;
+        ListFriendsRequest list_friends = 7;
+        AddFriendRequest add_friend = 8;
+        RemoveFriendRequest remove_friend = 9;
+        CaptchaRequest captcha = 10;
+        ModeratorRequest moderator = 11;
+        ReportRequest report = 12;
+        MailRequest mail = 13;
+        CreateReputationJobRequest create_reputation_job = 14;
+        LookForReputationJobRequest look_for_reputation_job = 15;
+        AddIgnoredPlayerRequest add_ignored_player = 16;
+        RemoveIgnoredPlayerRequest remove_ignored_player = 17;
+        GetReputationJobLocationRequest get_reputation_job_location = 18;
+        ForfeitReputationJobRequest forfeit_reputation_job = 19;
+        PlayerBoostRequest player_boost = 20;
+        ActivityRequest activity = 21;
+    }
+}
+
+message MiscResponse {
+    oneof response {
+        PingResponse ping = 1;
+        DisconnectResponse disconnect = 2;
+        InitialWorldStateResponse initial_world_state = 3;
+        GetPlayersOnlineResponse get_players_online = 4;
+        LogoutErrorResponse logout_error = 5;
+        SystemMessageResponse system_message = 6;
+        ServerBoostResponse server_boost = 7;
+        ServerBoostAnnouncementResponse server_boost_announcement = 8;
+        OpenGameGuideResponse open_game_guide = 9;
+        UserInterfaceEffectResponse user_interface_effect = 10;
+        ListFriendsResponse list_friends = 11;
+        AddFriendResponse add_friend = 12;
+        RemoveFriendResponse remove_friend = 13;
+        CaptchaResponse captcha = 14;
+        ModeratorResponse moderator = 15;
+        ReportResponse report = 16;
+        MailResponse mail = 17;
+        CreateReputationJobResponse create_reputation_job = 18;
+        LookForReputationJobResponse look_for_reputation_job = 19;
+        ReputationJobUpdateResponse reputation_job_update = 20;
+        AddIgnoredPlayerResponse add_ignored_player = 21;
+        RemoveIgnoredPlayerResponse remove_ignored_player = 22;
+        SetMiscSettingsResponse set_misc_settings = 23;
+        GetReputationJobLocationResponse get_reputation_job_location = 24;
+        ForfeitReputationJobResponse forfeit_reputation_job = 25;
+        PlayerBoostResponse player_boost = 26;
+        ShowStoryDialogueResponse show_story_dialogue = 27;
+        RewardedStreamResponse rewarded_stream = 28;
+    }
+}
+
+message AuthenticateRequest {
+    optional bytes encrypted_login_key = 1;
+    optional string name = 2;
+}
+
+message LogoutRequest {
+    
+}
+
+message GetPlayersOnlineRequest {
+    
+}
+
+message SetMiscSettingsRequest {
+    optional MiscSettings misc_settings = 1;
+}
+
+message ServerBoostRequest {
+    optional ServerBoostType type = 1;
+}
+
+message PlayerBoostRequest {
+    optional PlayerBoostType.Enum type = 1;
+    optional int64 paying_gold = 2;
+}
+
+message DisconnectResponse {
+    optional ReasonType reason = 1;
+    enum ReasonType {
+        UNKNOWN = 0;
+        WORLD_TOO_BUSY = 1;
+        OUT_OF_SYNC = 2;
+        KICKED_OUT = 3;
+        OTHER_ERROR = 4;
+        AFK = 5;
+        LOGOUT = 6;
+        SHUTTING_DOWN = 7;
+        MULTIPLE_PLAYERS_AND_TRAINING = 8;
+        FORCE_RECONNECT = 9;
+    }
+}
+
+message MiscSettings {
+    optional bool peaceful_mode_enabled = 1 [default = true];
+    optional bool reputation_job_locator_enabled = 2 [default = true];
+    optional bool disallow_rewarded_streams = 3;
+}
+
+message InitialWorldStateResponse {
+    optional int64 player_map_id = 1;
+    optional common.gamemap.Position player_position = 2;
+    repeated Creature creature = 3;
+    optional int32 mana_now = 4;
+    optional int64 experience = 5;
+    optional Container backpack = 6;
+    optional Container loot = 19;
+    optional Equipments equipments = 7;
+    optional Spells spells = 8;
+    optional int64 gold = 9;
+    optional Outfits outfits = 10;
+    optional Quests quests = 11;
+    optional MiscSettings misc_settings = 12;
+    repeated MapEvent map_event = 14;
+    optional NonTransferableKakeleCoins kakele_coins = 15;
+    optional int64 transferable_kakele_coins = 16;
+    optional DailyRewardInfo daily_reward = 17;
+    optional PvpInfo pvp_info = 18;
+    optional int32 stamina_left_minutes = 20;
+    repeated ServerBoost active_server_boost = 21;
+    repeated PlayerBoost active_player_boost = 27;
+    optional OwnedPets pets = 24;
+    optional int64 reputation_coins = 25;
+    repeated string player_name_to_ignore = 26;
+    optional ModerationAccess.Enum moderation_access = 28;
+    repeated RegionWeather region_weather = 29;
+    
+    oneof house {
+        int32 owns_house_id = 22;
+        int32 bid_house_id = 23;
+    }
+}
+
+message GetPlayersOnlineResponse {
+    repeated OnlinePlayer online_player = 1;
+    message OnlinePlayer {
+        optional string name = 1;
+        optional common.other.Vocation.Enum vocation = 3;
+        optional int32 level = 4;
+    }
+    
+    optional Status status = 2;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        SERVER_IS_BUSY = 2;
+    }
+}
+
+message LogoutErrorResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        STILL_ON_BATTLE = 1;
+    }
+}
+
+message SystemMessageResponse {
+    optional Type type = 1;
+    enum Type {
+        UNKNOWN = 0;
+        SHUTTING_DOWN = 1;
+    }
+    
+    optional int32 minutes_until_shutdown = 2;
+}
+
+message UserInterfaceEffectResponse {
+    optional common.other.UserInterfaceElementId.Enum id = 1;
+    optional common.other.UserInterfaceEffect.Enum effect = 2;
+}
+
+message ServerBoostResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ERROR = 2;
+    }
+}
+
+message PlayerBoostResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        ERROR = 2;
+    }
+}
+
+message ServerBoostAnnouncementResponse {
+    optional ServerBoost boost = 1;
+    optional string player = 2;
+}
+
+message OpenGameGuideResponse {
+    optional common.other.GameGuideId.Enum game_guide = 1;
+}
+
+message ListFriendsRequest {
+    
+}
+
+message ListFriendsResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OTHER_ERROR = 2;
+    }
+    
+    repeated Friend friend_list = 2;
+}
+
+message AddFriendRequest {
+    optional string name = 1;
+    optional Friend.Icon icon = 2;
+}
+
+message AddFriendResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OFFLINE_OR_DOES_NOT_EXIST = 2;
+        OTHER_ERROR = 3;
+    }
+    
+    optional string name = 2;
+}
+
+message RemoveFriendRequest {
+    optional string name = 1;
+}
+
+message RemoveFriendResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OTHER_ERROR = 2;
+    }
+}
+
+message AddIgnoredPlayerRequest {
+    optional string name = 1;
+}
+
+message AddIgnoredPlayerResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OFFLINE_OR_DOES_NOT_EXIST = 2;
+        OTHER_ERROR = 3;
+    }
+}
+
+message RemoveIgnoredPlayerRequest {
+    optional string name = 1;
+}
+
+message RemoveIgnoredPlayerResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OTHER_ERROR = 2;
+    }
+}
+
+message CaptchaResponse {
+    optional Text title = 1;
+    optional Text text = 2;
+    optional Text label = 3;
+    optional int32 additional_width_px = 4;
+}
+
+message CaptchaRequest {
+    optional int32 click_x = 1;
+    optional int32 click_y = 2;
+    optional int64 press_millis = 3;
+    
+    repeated MouseMovement mouse_movement = 4;
+    message MouseMovement {
+        optional int32 x = 1;
+        optional int32 y = 2;
+    }
+}
+
+message ReportRequest {
+    oneof request {
+        List list = 1;
+        Create create = 2;
+        AddMessage add_message = 3;
+        Close close = 4;
+    }
+    
+    message List {
+        
+    }
+    
+    message Create {
+        optional string message = 1;
+        optional Report.Type.Enum type = 2;
+        optional Report.AdditionalInfo additional_info = 3;
+    }
+    
+    message AddMessage {
+        optional int64 report_id = 1;
+        optional string message = 2;
+    }
+    
+    message Close {
+        optional int64 report_id = 1;
+    }
+}
+
+message ReportResponse {
+    oneof response {
+        List list = 1;
+        Create create = 2;
+        AddMessage add_message = 3;
+        Close close = 4;
+        Update update = 5;
+    }
+    
+    message List {
+        repeated Report open_report = 1;
+        repeated Report closed_report = 2;
+    }
+    
+    message Create {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN = 0;
+            OTHER_ERROR = 1;
+            SUCCESSFUL = 2;
+        }
+        
+        optional int64 report_id = 2;
+    }
+    
+    message AddMessage {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN = 0;
+            OTHER_ERROR = 1;
+            TOO_MANY_MESSAGES = 2;
+            SUCCESSFUL = 3;
+        }
+    }
+    
+    message Close {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN = 0;
+            OTHER_ERROR = 1;
+            SUCCESSFUL = 2;
+        }
+    }
+    
+    message Update {
+        optional int64 report_id = 1;
+        optional Report.Type.Enum report_type = 2;
+        optional string creator_name = 5;
+        optional bool auto_closed = 6;
+        optional Report.AdditionalInfo additional_info = 7;
+        
+        oneof new_value {
+            Report.ReportMessage report_message = 3;
+            bool closed = 4;
+        }
+    }
+}
+
+message MailRequest {
+    optional common.gamemap.Position mailbox_position = 1;
+    
+    oneof request {
+        Send send = 2;
+        Cancel cancel = 3;
+        History history = 4;
+    }
+    
+    message Send {
+        optional string player_name = 1;
+        optional string content = 2;
+        optional Container items = 3;
+        optional int64 gold = 4;
+        optional int64 kakele_coins = 5;
+    }
+    
+    message Cancel {
+        optional string receiver_name = 1;
+    }
+    
+    message History {
+        
+    }
+}
+
+message MailResponse {
+    oneof response {
+        Send send = 1;
+        Cancel cancel = 2;
+        History history = 3;
+    }
+    
+    message Send {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN = 0;
+            OTHER_ERROR = 1;
+            TOO_MANY_MAILS = 2;
+            SUCCESSFUL = 3;
+        }
+    }
+    
+    message Cancel {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN = 0;
+            OTHER_ERROR = 1;
+            SUCCESSFUL = 2;
+        }
+        
+        optional int64 gold = 2;
+        optional int64 kakele_coins = 3;
+        repeated Item item = 4;
+    }
+    
+    message History {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN = 0;
+            OTHER_ERROR = 1;
+            SUCCESSFUL = 2;
+        }
+        
+        repeated MailEntry entry = 2;
+    }
+}
+
+message CreateReputationJobRequest {
+    optional Type type = 1;
+    enum Type {
+        UNKNOWN = 0;
+        LEVEL = 1;
+    }
+}
+
+message CreateReputationJobResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        ALREADY_LISTED = 1;
+        NEEDS_TO_WAIT_LONGER = 2;
+        SUCCESSFUL = 3;
+    }
+}
+
+message LookForReputationJobRequest {
+    
+}
+
+message LookForReputationJobResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        ALREADY_LOOKING = 1;
+        NEEDS_TO_WAIT_LONGER = 2;
+        SUCCESSFUL = 3;
+    }
+}
+
+message ReputationJobUpdateResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        JOB_UPDATED = 1;
+        JOB_CANCELLED = 2;
+        JOB_COMPLETED = 3;
+    }
+    
+    repeated string accepted_by_player_name = 2;
+    optional string listed_by_player_name = 3;
+    optional bool add_reputation_coin = 4;
+}
+
+message SetMiscSettingsResponse {
+    
+}
+
+message GetReputationJobLocationRequest {
+    
+}
+
+message GetReputationJobLocationResponse {
+    optional common.gamemap.Position position = 1;
+}
+
+message ForfeitReputationJobRequest {
+    
+}
+
+message ForfeitReputationJobResponse {
+    
+}
+
+message ShowStoryDialogueResponse {
+    optional int32 id = 1;
+    optional bool clear_queued_dialogues = 2;
+}
+
+message ActivityRequest {
+    repeated TouchEvent touch_event = 1;
+    message TouchEvent {
+        optional int64 duration_millis = 1;
+        optional bool focused = 2;
+        optional int32 pointer = 3;
+    }
+    
+    repeated KeyEvent key_event = 2;
+    message KeyEvent {
+        optional int64 duration_millis = 1;
+        optional bool focused = 2;
+        optional int32 code = 3;
+    }
+}
+
+message RewardedStreamResponse {
+    optional Type type = 1;
+    enum Type {
+        UNKNOWN = 0;
+        STREAM_START = 1;
+        REWARDED = 2;
+    }
+}

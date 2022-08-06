@@ -1,0 +1,38 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+message ServerBoost {
+    optional ServerBoostType type = 1;
+    optional int64 expiration_seconds = 2;
+}
+
+message ServerBoosts {
+    repeated ServerBoost server_boost = 1;
+}
+
+message PlayerBoostType {
+    enum Enum {
+        UNKNOWN_PLAYER_BOOST_TYPE = 0;
+        EXPERIENCE_30_PERCENT = 1;
+    }
+}
+
+message PlayerBoost {
+    optional PlayerBoostType.Enum type = 1;
+    optional int64 expiration_seconds = 2;
+}
+
+message PlayerBoosts {
+    repeated PlayerBoost player_boost = 1;
+}
+
+enum ServerBoostType {
+    UNKNOWN_BOOST_TYPE = 0;
+    EXPERIENCE_30_PERCENT = 1;
+    LOOT_AND_GOLD_TWICE_MORE = 2;
+    FOOD_POWER_25_PERCENT = 3;
+    ATTACK_ARMOR_SPELL_POWER_10_PERCENT = 4;
+    MAP_EVENTS_2_TIMES = 5;
+    GOLDEN_MONSTER_CHANCE_TWICE_MORE = 6;
+}

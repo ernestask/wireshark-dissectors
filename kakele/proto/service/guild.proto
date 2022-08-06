@@ -1,0 +1,229 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+import "common/other/vocation.proto";
+
+message MemberRole {
+    enum Enum {
+        UNKNOWN = 0;
+        MEMBER = 1;
+        VICE_LEADER = 2;
+        LEADER = 3;
+    }
+}
+
+message GuildBadge {
+    repeated Color pixel_color = 1;
+    message Color {
+        optional int32 red = 1;
+        optional int32 green = 2;
+        optional int32 blue = 3;
+    }
+}
+
+message GuildRequest {
+    oneof request {
+        ListGuilds list_guilds = 1;
+        ListMembers list_members = 2;
+        Create create = 3;
+        ChangeDescription change_description = 4;
+        ChangeRole change_role = 5;
+        InvitePlayer invite_player = 6;
+        KickPlayer kick_player = 7;
+        Join join = 8;
+        Leave leave = 9;
+        GetGuildBadge get_guild_badge = 10;
+        UpdateGuildBadge update_guild_badge = 11;
+    }
+    
+    message ListGuilds {
+        
+    }
+    
+    message ListMembers {
+        optional string guild_name = 1;
+    }
+    
+    message Create {
+        optional string name = 1;
+        optional string complete_name = 2;
+        optional string description = 3;
+    }
+    
+    message ChangeDescription {
+        optional string new_description = 3;
+    }
+    
+    message ChangeRole {
+        optional string player_name = 1;
+        optional MemberRole.Enum new_role = 2;
+    }
+    
+    message InvitePlayer {
+        optional string player_name = 1;
+    }
+    
+    message KickPlayer {
+        optional string player_name = 1;
+    }
+    
+    message Join {
+        optional string guild_name = 1;
+    }
+    
+    message Leave {
+        
+    }
+    
+    message GetGuildBadge {
+        optional string guild = 1;
+    }
+    
+    message UpdateGuildBadge {
+        optional GuildBadge guild_badge = 1;
+        optional bool tweaking = 2;
+    }
+}
+
+message GuildResponse {
+    oneof response {
+        PlayerGuildUpdate player_guild_update = 1;
+        ListGuilds list_guilds = 2;
+        ListMembers list_members = 3;
+        Create create = 4;
+        ChangeDescription change_description = 5;
+        ChangeRole change_role = 6;
+        InvitePlayer invite_player = 7;
+        KickPlayer kick_player = 8;
+        Join join = 9;
+        Leave leave = 10;
+        GetGuildBadge get_guild_badge = 11;
+        UpdateGuildBadge update_guild_badge = 12;
+    }
+    
+    message PlayerGuildUpdate {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN = 0;
+            LEFT = 1;
+            JOINED = 2;
+        }
+        
+        optional int64 player_map_id = 2;
+        optional string guild_name = 3;
+    }
+    
+    message ListGuilds {
+        repeated Guild guild = 1;
+        message Guild {
+            optional string name = 1;
+            optional string complete_name = 2;
+            optional string description = 3;
+            optional int32 member_count = 4;
+            optional int64 created_unix_seconds = 5;
+        }
+    }
+    
+    message ListMembers {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN_STATUS = 0;
+            GUILD_NOT_FOUND = 1;
+            SUCCESSFUL = 2;
+        }
+        
+        repeated Member member = 2;
+        message Member {
+            optional string maybe_outdated_player_name = 1;
+            optional int32 level = 2;
+            optional common.other.Vocation.Enum vocation = 3;
+            optional MemberRole.Enum role = 4;
+            optional bool online = 5;
+            optional int64 joined_unix_seconds = 6;
+            optional int64 last_login_unix_seconds = 7;
+        }
+        
+        repeated string invited_maybe_outdated_player_name = 3;
+    }
+    
+    message Create {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN = 0;
+            NAME_EXISTS = 1;
+            OTHER_ERROR = 2;
+            SUCCESSFUL = 3;
+        }
+    }
+    
+    message ChangeDescription {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN = 0;
+            OTHER_ERROR = 1;
+            SUCCESSFUL = 2;
+        }
+    }
+    
+    message ChangeRole {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN = 0;
+            PLAYER_OFFLINE = 1;
+            OTHER_ERROR = 2;
+            SUCCESSFUL = 3;
+        }
+    }
+    
+    message InvitePlayer {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN = 0;
+            PLAYER_OFFLINE = 1;
+            OTHER_ERROR = 2;
+            SUCCESSFUL = 3;
+        }
+    }
+    
+    message KickPlayer {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN = 0;
+            OTHER_ERROR = 1;
+            SUCCESSFUL = 2;
+        }
+    }
+    
+    message Join {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN = 0;
+            OTHER_ERROR = 1;
+            SUCCESSFUL = 2;
+        }
+    }
+    
+    message Leave {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN = 0;
+            OTHER_ERROR = 1;
+            SUCCESSFUL = 2;
+        }
+    }
+    
+    message GetGuildBadge {
+        optional GuildBadge badge = 1;
+    }
+    
+    message UpdateGuildBadge {
+        optional Status status = 1;
+        enum Status {
+            UNKNOWN_STATUS = 0;
+            SUCCESSFUL = 1;
+            OTHER_ERROR = 2;
+            TWEAKING_IS_OUT_OF_SYNC = 3;
+        }
+    }
+}

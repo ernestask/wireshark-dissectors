@@ -1,0 +1,16 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+import "common/quest/quest.proto";
+
+message Quests {
+    repeated Quest quest = 1;
+    message Quest {
+        optional int32 quest_id = 1;
+        optional common.quest.QuestState quest_state = 2;
+        optional bool claimed_reward_box = 3;
+        optional int32 completion_times = 4;
+        optional int64 last_completion_unix_seconds = 5;
+    }
+}

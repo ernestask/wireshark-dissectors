@@ -1,0 +1,28 @@
+syntax = "proto2";
+
+package mmorpg.proto.client.gamemap;
+
+import "client/other/text.proto";
+import "common/gamemap/position.proto";
+
+message MinimapHint {
+    optional int32 id = 1;
+    optional other.ObfuscatedText description = 2;
+    
+    optional IconType icon_type = 3 [default = HINT];
+    enum IconType {
+        UNKNOWN_TYPE = 0;
+        HINT = 1;
+        MONSTER = 2;
+    }
+}
+
+message SqmHint {
+    repeated common.gamemap.Position position = 1;
+    optional MinimapHint hint = 2;
+}
+
+message SqmText {
+    repeated common.gamemap.Position position = 1;
+    optional other.ObfuscatedText text = 2;
+}

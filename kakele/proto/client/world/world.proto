@@ -1,0 +1,40 @@
+syntax = "proto2";
+
+package mmorpg.proto.client.world;
+
+import "client/gamemap/minimap_hint.proto";
+import "client/other/text.proto";
+import "common/gamemap/position.proto";
+
+message World {
+    optional int32 id = 1;
+    optional other.ObfuscatedText name = 2;
+    optional int32 maximum_players = 3;
+    optional int32 additional_premium_maximum_players = 4;
+    repeated MapEvent map_event = 5;
+    repeated gamemap.SqmText sqm_text = 6;
+    repeated House house = 7;
+    repeated Region region = 8;
+}
+
+message Region {
+    optional int32 id = 1;
+    repeated int32 packed_position = 2;
+    optional bool music = 3;
+    optional bool battle_music = 4;
+}
+
+message MapEvent {
+    optional int32 id = 1;
+    optional other.ObfuscatedText title = 2;
+    optional other.ObfuscatedText description = 3;
+    optional other.ObfuscatedText summary = 4;
+}
+
+message House {
+    optional int32 id = 1;
+    optional other.ObfuscatedText name = 2;
+    optional int32 monthly_rent_kakele_coins = 3;
+    repeated common.gamemap.Position position = 4;
+    optional common.gamemap.Position mailbox_position = 5;
+}

@@ -1,0 +1,28 @@
+syntax = "proto2";
+
+package mmorpg.proto.common.item;
+
+message Slot {
+    enum Enum {
+        UNKNOWN_SLOT = 0;
+        HEAD = 1;
+        CHEST = 2;
+        FEET = 3;
+        OFF_HAND = 4;
+        NECK = 5;
+        FINGER = 6;
+        WEAPON = 7;
+        LEGS = 8;
+        TOOL = 9;
+    }
+}
+
+message Rarity {
+    enum Enum {
+        UNKNOWN = 0;
+        COMMON = 1;
+        UNCOMMON = 2;
+        RARE = 3;
+        LEGENDARY = 4;
+    }
+}

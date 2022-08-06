@@ -1,0 +1,26 @@
+syntax = "proto2";
+
+package mmorpg.proto.client.creature;
+
+import "common/other/energy.proto";
+import "client/other/text.proto";
+import "common/other/light.proto";
+
+message Monster {
+    optional int32 id = 1;
+    optional other.ObfuscatedText name = 2;
+    optional int32 walking_speed_factor = 3;
+    
+    optional Boss boss = 5;
+    message Boss {
+        optional bool ignore_screenshots = 1;
+    }
+    
+    optional bool flier = 6;
+    optional int32 max_health = 8;
+    optional common.other.Light light = 9;
+    optional bool music = 10;
+    optional common.other.Energy.Enum energy = 11;
+    
+    reserved 4;
+}

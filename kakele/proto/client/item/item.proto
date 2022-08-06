@@ -1,0 +1,80 @@
+syntax = "proto2";
+
+package mmorpg.proto.client.item;
+
+import "common/creature/flag.proto";
+import "common/item/item.proto";
+import "common/other/energy.proto";
+import "common/other/light.proto";
+import "common/other/vocation.proto";
+import "client/other/text.proto";
+
+message Item {
+    optional int32 id = 1;
+    optional other.ObfuscatedText name = 2;
+    optional other.ObfuscatedText description = 3;
+    optional int32 max_stack = 4;
+    optional int32 selling_gold = 5;
+    
+    optional DailyReward daily_reward = 9;
+    message DailyReward {
+        optional int32 min_login_points = 1;
+        optional int32 count = 2;
+    }
+    
+    optional common.other.Light light = 11;
+    optional common.item.Rarity.Enum rarity = 12;
+    
+    oneof type {
+        Equipment equipment = 6;
+        Food food = 7;
+        Other other = 8;
+        Teleport teleport = 10;
+    }
+}
+
+message Attributes {
+    optional int32 attack = 1;
+    optional int32 armor = 2;
+    optional int32 magic = 3;
+    
+    repeated FlagAttribute flag_attribute = 4;
+    message FlagAttribute {
+        optional common.creature.Flag.Type flag = 1;
+        optional int32 value = 2;
+    }
+    
+    optional int32 default_remaining_seconds = 5;
+}
+
+message Equipment {
+    optional common.item.Slot.Enum slot = 1;
+    optional Attributes attributes = 2;
+    optional int32 level = 3 [default = 1];
+    repeated common.other.Vocation.Enum vocation = 4;
+    
+    optional Weapon weapon = 5;
+    message Weapon {
+        optional bool two_handed = 1;
+        optional bool direct_damage = 2;
+        optional int32 range_sqm = 3;
+    }
+    
+    optional common.other.Energy.Enum energy = 6;
+}
+
+message Food {
+    optional int32 health_gain = 1;
+    optional int32 mana_gain = 2;
+    optional int32 level = 3;
+}
+
+message Other {
+    optional int32 herb_health_points = 1;
+    optional int32 herb_mana_points = 2;
+    optional int32 experience_loss_reduction_percent = 3;
+}
+
+message Teleport {
+    optional int32 level = 1;
+}

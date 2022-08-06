@@ -1,0 +1,361 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+import "service/container.proto";
+import "service/other.proto";
+
+message NonTransferableKakeleCoins {
+    repeated Coin coin = 1;
+    message Coin {
+        optional int64 quantity = 1;
+        optional int64 matures_at_unix_seconds = 2;
+    }
+}
+
+message PublisherCreditStatus {
+    enum Enum {
+        UNKNOWN = 0;
+        CREDIT_PENDING = 1;
+        CREDIT_APPLIED = 2;
+        CREDIT_CANCELED = 3;
+    }
+}
+
+message Payment {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        PENDING = 1;
+        COMPLETED = 2;
+        CANCELLED = 3;
+    }
+    
+    optional PackageType package_type = 2;
+    enum PackageType {
+        UNKNOWN_PACKAGE_TYPE = 0;
+        COINS_500 = 1;
+        COINS_1500 = 2;
+        COINS_3000 = 3;
+        COINS_10000 = 4;
+    }
+    
+    optional PaymentType payment_type = 3;
+    enum PaymentType {
+        UNKNOWN_PAYMENT_TYPE = 0;
+        PAYPAL = 1;
+        PICPAY = 2;
+        BANK = 3;
+        GOOGLE_PLAY = 4;
+        APPLE = 5;
+        STEAM = 6;
+        TOKEN = 7;
+    }
+    
+    optional bytes encrypted_external_id = 4;
+    optional int64 created_seconds_ago = 5;
+    
+    message ExternalId {
+        oneof id {
+            string paypal_id = 1;
+            string bank_id = 3;
+            PicPayId picpay_id = 5;
+            SteamId steam_id = 6;
+            string token_id = 7;
+            string deprecated_picpay_id = 2 [deprecated = true];
+            GooglePlayId deprecated_google_play_id = 4 [deprecated = true];
+        }
+    }
+}
+
+message GooglePlayId {
+    
+}
+
+message PicPayId {
+    optional string payment_id = 1;
+    optional string reference_id = 2;
+}
+
+message SteamId {
+    optional string steam_id = 1;
+    optional string order_number = 2;
+    optional string transaction_id = 3;
+}
+
+message AdditionalCreatePaymentPayload {
+    optional string steam_id = 1;
+}
+
+message CreatePaymentRequest {
+    optional bytes encrypted_login_key = 1;
+    optional Payment.PaymentType type = 2;
+    optional Payment.PackageType package_type = 3;
+    optional AdditionalCreatePaymentPayload additional_payload = 4;
+}
+
+message CreatePaymentResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OUT_OF_SYNC = 2;
+        OTHER_ERROR = 3;
+        TOO_MANY_PAYMENTS = 4;
+    }
+    
+    optional bytes encrypted_external_id = 2;
+}
+
+message GetPaymentsRequest {
+    optional bytes encrypted_login_key = 1;
+}
+
+message GetPaymentsResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OUT_OF_SYNC = 2;
+        OTHER_ERROR = 3;
+    }
+    
+    optional Payment latest_completed_payment = 2;
+    optional Payment pending_payment = 3;
+    optional int64 kakele_coins = 4;
+    optional int64 transferable_kakele_coins = 5;
+}
+
+message CancelPaymentRequest {
+    optional bytes encrypted_login_key = 1;
+}
+
+message CancelPaymentResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OUT_OF_SYNC = 2;
+        OTHER_ERROR = 3;
+    }
+}
+
+message BuyPremiumRequest {
+    optional bytes encrypted_login_key = 1;
+    
+    optional PremiumDays premium_days = 2;
+    enum PremiumDays {
+        UNKNOWN = 0;
+        DAYS_7 = 1;
+        DAYS_15 = 2;
+        DAYS_30 = 3;
+        DAYS_90 = 4;
+    }
+}
+
+message BuyPremiumResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OUT_OF_SYNC = 2;
+        OTHER_ERROR = 3;
+    }
+}
+
+message ChangeNameRequest {
+    optional bytes encrypted_login_key = 1;
+    optional string player_name = 2;
+    optional string new_name = 3;
+}
+
+message ChangeNameResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        NAME_NOT_AVAILABLE = 2;
+        OUT_OF_SYNC = 3;
+        OTHER_ERROR = 4;
+    }
+}
+
+message UpdatePendingPaymentRequest {
+    optional bytes encrypted_login_key = 1;
+    optional bytes encrypted_unique_reference = 3;
+}
+
+message UpdatePendingPaymentResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OUT_OF_SYNC = 2;
+        OTHER_ERROR = 3;
+        ALREADY_EXISTS = 4;
+    }
+}
+
+message CalculateTransferableCoinsRequest {
+    optional bytes encrypted_login_key = 1;
+    optional Payment.PaymentType type = 2;
+    optional Payment.PackageType package_type = 3;
+    optional AdditionalCreatePaymentPayload additional_payload = 4;
+}
+
+message CalculateTransferableCoinsResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OUT_OF_SYNC = 2;
+        OTHER_ERROR = 3;
+    }
+    
+    optional NonTransferableKakeleCoins coins = 2;
+    optional int64 transferable_kakele_coins = 3;
+    optional double cost = 4;
+    
+    optional CoinType coin_type = 5;
+    enum CoinType {
+        UNKNOWN_TYPE = 0;
+        DOLLAR = 1;
+        TOKEN = 2;
+        EURO = 3;
+        BRAZILIAN_REAL = 4;
+    }
+    
+    optional int32 discount_percent = 6;
+}
+
+message DeleteCharacterRequest {
+    optional bytes encrypted_login_key = 1;
+    optional string name = 2;
+}
+
+message DeleteCharacterResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OUT_OF_SYNC = 2;
+        OTHER_ERROR = 3;
+    }
+}
+
+message ChangeEmailRequest {
+    optional bytes encrypted_login_key = 1;
+    optional bytes encrypted_new_email = 2;
+    optional bytes encrypted_new_password = 3;
+    
+    oneof auth_method {
+        AuthorizeWithEmailAndPassword authorize_with_email_and_password = 4;
+        AuthorizeWithRecoveryKey authorize_with_recovery_key = 5;
+    }
+    
+    message AuthorizeWithEmailAndPassword {
+        optional bytes encrypted_old_email = 1;
+        optional bytes encrypted_old_password = 2;
+    }
+    
+    message AuthorizeWithRecoveryKey {
+        optional bytes encrypted_recovery_key = 1;
+    }
+}
+
+message ChangeEmailResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        EMAIL_IN_USE = 2;
+        INVALID_AUTH = 3;
+        OUT_OF_SYNC = 4;
+        OTHER_ERROR = 5;
+    }
+}
+
+message GetRecoveryKeyRequest {
+    optional bytes encrypted_login_key = 1;
+    optional bool generate_new = 2;
+}
+
+message GetRecoveryKeyResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OTHER_ERROR = 2;
+        OUT_OF_SYNC = 3;
+    }
+}
+
+message ChangeWorldRequest {
+    optional bytes encrypted_login_key = 1;
+    optional string name = 2;
+    optional string new_world_replica = 3;
+}
+
+message ChangeWorldResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OUT_OF_SYNC = 2;
+        NOT_SAFE_TO_CHANGE_WORLD = 3;
+        OTHER_ERROR = 4;
+    }
+    
+    optional SafeToTransferStatus.Enum not_safe_to_transfer_reason = 2;
+}
+
+message CouponType {
+    enum Enum {
+        UNKNOWN = 0;
+        TRANSFERABLE_KAKELE_COINS_500 = 1;
+        KAKELE_COINS_CUSTOM = 2;
+        PREMIUM_DAYS_31 = 3;
+        PREMIUM_DAYS_CUSTOM = 4;
+        ADD_ITEM_TO_BANK = 5;
+    }
+}
+
+message CouponPayload {
+    oneof payload {
+        KakeleCoinsCustom kakele_coins_custom = 1;
+        PremiumDaysCustom premium_days_custom = 2;
+        AddItemToBank add_item_to_bank = 3;
+    }
+    
+    message KakeleCoinsCustom {
+        optional int32 transferable_kakele_coins = 1;
+    }
+    
+    message PremiumDaysCustom {
+        optional int32 premium_days = 1;
+    }
+    
+    message AddItemToBank {
+        optional Item item = 1;
+    }
+}
+
+message ClaimCouponRequest {
+    optional bytes encrypted_login_key = 1;
+    optional string coupon_code = 2;
+    optional string player_name = 3;
+}
+
+message ClaimCouponResponse {
+    optional Status status = 1;
+    enum Status {
+        UNKNOWN = 0;
+        SUCCESSFUL = 1;
+        OUT_OF_SYNC = 2;
+        ALREADY_CLAIMED_OR_EXPIRED = 3;
+        OTHER_ERROR = 4;
+    }
+    
+    optional CouponType.Enum type = 2;
+    optional CouponPayload payload = 3;
+}

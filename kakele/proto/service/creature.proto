@@ -1,0 +1,98 @@
+syntax = "proto2";
+
+package mmorpg.proto.service;
+
+import "common/creature/flag.proto";
+import "common/gamemap/position.proto";
+import "common/other/clan.proto";
+import "common/other/energy.proto";
+import "common/other/vocation.proto";
+import "service/outfit.proto";
+
+message PvpInfo {
+    repeated Kill kill = 1;
+    message Kill {
+        optional int64 time_unix_seconds = 1;
+    }
+    
+    enum PenaltyState {
+        UNKNOWN = 0;
+        INNOCENT = 1;
+        GUILTY = 2;
+        PUNISHED = 3;
+        DOOMED = 4;
+    }
+}
+
+message DamageType {
+    enum Enum {
+        UNKNOWN = 0;
+        PHYSICAL = 1;
+        DIRECT = 2;
+        MAGICAL = 3;
+    }
+}
+
+message OwnedPets {
+    repeated Pet pet = 1;
+    message Pet {
+        optional int32 id = 1;
+        optional int64 experience = 2;
+        optional string name = 3;
+        optional NameColor.Enum name_color = 4;
+    }
+}
+
+message Creature {
+    optional int64 creature_map_id = 1;
+    optional common.gamemap.Position position = 2;
+    optional common.other.Clan.Enum clan = 3;
+    optional int64 flag_bitmask = 4;
+    optional sint32 flags_speed_modifier_percent = 5;
+    
+    oneof creature {
+        Monster monster = 6;
+        Player player = 7;
+        Npc npc = 8;
+        Pet pet = 9;
+    }
+    
+    message Monster {
+        optional int32 monster_id = 1;
+        optional int32 health_now = 2;
+        optional bool elite = 3;
+        optional int64 owner_map_id = 4;
+    }
+    
+    message Player {
+        optional string name = 1;
+        optional common.other.Vocation.Enum vocation = 2;
+        optional int32 health_now = 3;
+        optional int32 level = 4;
+        optional PlayerOutfit outfit = 5;
+        optional bool premium = 6;
+        optional PvpInfo.PenaltyState pvp_penalty = 7 [default = INNOCENT];
+        optional string guild = 8;
+        optional common.other.Energy.Enum energy = 9;
+    }
+    
+    message Npc {
+        optional int32 npc_id = 1;
+    }
+    
+    message Pet {
+        optional int64 owner_map_id = 1;
+        optional int32 pet_id = 2;
+        optional int32 level = 3;
+        optional string name = 4;
+        optional NameColor.Enum name_color = 5;
+    }
+}
+
+message Exhaust {
+    enum Type {
+        UNKNOWN = 0;
+        PASSIVE = 1;
+        AGGRESSIVE = 2;
+    }
+}

@@ -1,0 +1,19 @@
+syntax = "proto2";
+
+package mmorpg.proto.common.gamemap;
+
+message Position {
+    optional int32 x = 1;
+    optional int32 y = 2;
+    optional int32 z = 3;
+}
+
+message Direction {
+    enum Enum {
+        UNKNOWN = 0;
+        NORTH = 1;
+        EAST = 2;
+        SOUTH = 3;
+        WEST = 4;
+    }
+}

@@ -1,0 +1,21 @@
+syntax = "proto2";
+
+package mmorpg.proto.common.other;
+
+message Light {
+    optional ColorType type = 1;
+    enum ColorType {
+        UNKNOWN_TYPE = 0;
+        WHITE = 1;
+        YELLOW = 2;
+        RED = 3;
+        GREEN = 4;
+        BLUE = 5;
+        PINK = 6;
+        PURPLE = 7;
+        GRAY = 8;
+    }
+    
+    optional int32 sqm_radius = 2;
+    optional bool flicker = 3;
+}

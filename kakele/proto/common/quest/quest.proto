@@ -1,0 +1,38 @@
+syntax = "proto2";
+
+package mmorpg.proto.common.quest;
+
+message QuestState {
+    oneof state {
+        int32 monsters_count = 1;
+        int32 items_count = 2;
+        int32 state_value = 3;
+        Completed completed = 4;
+    }
+    
+    message Completed {
+        
+    }
+}
+
+message StateQuestInfo {
+    
+}
+
+message MonsterQuestInfo {
+    optional int32 monster_id = 1;
+    optional int32 count = 2;
+}
+
+message ItemQuestInfo {
+    optional int32 item_id = 1;
+    optional int32 count = 2;
+}
+
+message RewardBox {
+    repeated ItemReward item_reward = 1;
+    message ItemReward {
+        optional int32 item_id = 1;
+        optional int32 count = 2;
+    }
+}

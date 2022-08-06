@@ -1,0 +1,117 @@
+syntax = "proto2";
+
+package mmorpg.proto.client.action;
+
+import "common/gamemap/position.proto";
+import "common/quest/quest.proto";
+
+message Requirement {
+    optional bool not = 13;
+    
+    oneof requirement {
+        Level level = 1;
+        Quest quest = 2;
+        WithEquipment with_equipment = 3;
+        IsPremium is_premium = 4;
+        ContainsItemInBackpack contains_item_in_backpack = 5;
+        HasAtLeastGoldAmount has_at_least_gold_amount = 6;
+        HasFreeSlotInContainer has_free_slot_in_container = 9;
+        ContainsWornItemInBackpack contains_worn_item_in_backpack = 10;
+        LastPhraseOnLocalChat last_phrase_on_local_chat = 11;
+        ExecutedFromPosition executed_from_position = 12;
+        Health health = 14;
+        TimeOfDay time_of_day = 7;
+        EventActive event_active = 8;
+    }
+    
+    message Level {
+        optional int32 level = 1;
+        
+        optional Operation operation = 2;
+        enum Operation {
+            UNKNOWN_OPERATION = 0;
+            EQUAL_OR_LESS_THAN = 1;
+            EQUAL_OR_GREATER_THAN = 2;
+        }
+    }
+    
+    message Quest {
+        optional int32 quest_id = 1;
+        optional common.quest.QuestState quest_state = 2;
+        
+        optional Operation operation = 3 [default = EQUAL];
+        enum Operation {
+            UNKNOWN_OPERATION = 0;
+            EQUAL = 1;
+            NOT_EQUAL = 2;
+            EQUAL_OR_LESS_THAN = 3;
+            EQUAL_OR_GREATER_THAN = 4;
+            BITWISE_AND_EQUALS = 5;
+            BITWISE_AND_NOT_EQUALS = 6;
+        }
+        
+        optional int32 completed_seconds_ago = 4;
+        optional int32 completed_at_least_times = 5;
+    }
+    
+    message WithEquipment {
+        optional int32 item_id = 1;
+    }
+    
+    message IsPremium {
+        
+    }
+    
+    message TimeOfDay {
+        repeated int32 minutes_of_hour = 1;
+    }
+    
+    message EventActive {
+        optional int32 event_id = 1;
+        optional int32 seconds_remaining = 2;
+    }
+    
+    message ContainsItemInBackpack {
+        optional int32 item_id = 1;
+        optional int32 count = 2;
+    }
+    
+    message HasAtLeastGoldAmount {
+        optional int64 amount = 1;
+    }
+    
+    message HasFreeSlotInContainer {
+        optional int32 count = 1 [default = 1];
+        
+        optional Container container = 2 [default = BACKPACK];
+        enum Container {
+            UNKNOWN = 0;
+            BACKPACK = 1;
+            LOOT = 2;
+        }
+    }
+    
+    message ContainsWornItemInBackpack {
+        optional int32 item_id = 1;
+    }
+    
+    message LastPhraseOnLocalChat {
+        optional string message = 1;
+        optional int32 said_seconds_ago = 2;
+    }
+    
+    message ExecutedFromPosition {
+        optional common.gamemap.Position position = 1;
+    }
+    
+    message Health {
+        optional int32 health = 1;
+        
+        optional Operation operation = 2 [default = EQUAL_OR_GREATER_THAN];
+        enum Operation {
+            UNKNOWN_OPERATION = 0;
+            EQUAL_OR_LESS_THAN = 1;
+            EQUAL_OR_GREATER_THAN = 2;
+        }
+    }
+}
