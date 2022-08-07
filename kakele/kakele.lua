@@ -19,10 +19,25 @@ function is_client_message(pinfo)
     return pinfo.dst_port == port
 end
 
+function label(pinfo)
+    if is_client_message(pinfo) then
+        return 'request'
+    else
+        return 'response'
+    end
+end
+
+function pb_msg_type(pinfo)
+    if is_client_message(pinfo) then
+        return 'message,' .. prefs:type_c2s(kakele)
+    else
+        return 'message,' .. prefs:type_s2c(kakele)
+    end
+end
+
 function dissect_message(tvb, pinfo, tree)
+    local subtree = tree:add(kakele, tvb:range(), 'Kakele', label(pinfo))
     local length = tvb:range(0, 2):uint()
-    local type = prefs:msg_type(kakele)
-    local subtree = tree:add(kakele, tvb:range(), 'Kakele message', type)
 
     subtree:add(kakele.fields.length, length)
     subtree:add(kakele.fields.separator, tvb:range(2, 1))
@@ -30,7 +45,7 @@ function dissect_message(tvb, pinfo, tree)
     local msg_range = tvb:range(offset, length)
     local msg_tree = subtree:add(kakele.fields.message, msg_range)
 
-    pinfo.private['pb_msg_type'] = 'message,' .. type
+    pinfo.private['pb_msg_type'] = pb_msg_type(pinfo)
 
     return pb_dissector:call(msg_range:tvb(),
                              pinfo,

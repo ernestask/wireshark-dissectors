@@ -50,15 +50,25 @@ cat << EOF >> kakele_prefs.lua
 }
 
 function prefs:populate(proto)
-    proto.prefs.msg_type = Pref.enum('Message type',
+    proto.prefs.type_c2s = Pref.enum('Request type',
                                      prefs.message_type.MESSAGE_NONE,
-                                     'Message type to decode',
+                                     'Message type to decode for client requests',
+                                     prefs.messages,
+                                     false)
+
+    proto.prefs.type_s2c = Pref.enum('Response type',
+                                     prefs.message_type.MESSAGE_NONE,
+                                     'Message type to decode for server responses',
                                      prefs.messages,
                                      false)
 end
 
-function prefs:msg_type(proto)
-    return self.message_names[proto.prefs.msg_type + 1]
+function prefs:type_c2s(proto)
+    return self.message_names[proto.prefs.type_c2s + 1]
+end
+
+function prefs:type_s2c(proto)
+    return self.message_names[proto.prefs.type_s2c + 1]
 end
 
 return prefs
